@@ -111,6 +111,15 @@ the app does.
   empty state but got the spinner, which is correct behaviour. The test now passes explicit
   terminal `LoadStates`, and a separate test pins the fresh-query spinner.
 
+- **Slice 7, the release build could not parse any JSON.** `assembleRelease` succeeded and the
+  app launched, but Home showed "Couldn't load movies" while the debug build loaded real data on
+  the same network seconds earlier. The DTOs carried `@JsonClass(generateAdapter = true)` while no
+  codegen processor was declared, so Moshi used the reflective `KotlinJsonAdapterFactory` and R8
+  renamed the fields out from under it. Fixed with `ksp(libs.moshi.kotlin.codegen)`, dropping the
+  reflective factory. Two lessons: a green `assembleRelease` proves nothing about runtime, and
+  `runCatching` in the repository swallowed the `JsonDataException` so the only symptom was a
+  failed refresh.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:
@@ -123,6 +132,6 @@ Cumulative unit tests after each slice, useful as a smoke check that nothing was
 | 3 | 65 | 9 |
 | 4 | 89 | 9 |
 | 5 | 92 | 9 + 6 UI |
-| 6 | 49 | 9 |
+| 6 | 103 | 9 + 6 UI |
 
 Counts are approximate — they assume no extra cases were added while implementing.
