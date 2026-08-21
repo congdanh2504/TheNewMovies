@@ -31,6 +31,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.navigation)
     implementation(projects.feature.detail.api)
+    implementation(projects.feature.detail.impl)
     implementation(projects.feature.home.api)
     implementation(projects.feature.home.impl)
     implementation(projects.feature.search.api)
