@@ -1,0 +1,48 @@
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/model/NetworkCast.kt
+  s_5373a0f018b70a::t_5876cbf41c287e 12,16-33
+  s_5373a0f018b70a::t_ed1a567b8fbe1e 1-11,13-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/retrofit/TmdbApi.kt
+  s_5373a0f018b70a::t_b3c0452aaae50b 16-55
+  s_5373a0f018b70a::t_a8b5ee43a7a097 1-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/model/NetworkMovieDetail.kt
+  s_5373a0f018b70a::t_5876cbf41c287e 6,8,16-43
+  s_5373a0f018b70a::t_389c058655438e 1-5,7,9-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/model/NetworkPage.kt
+  s_5373a0f018b70a::t_5876cbf41c287e 16-27
+  s_5373a0f018b70a::t_b5c4cc4604ad30 1-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/retrofit/RetrofitMoviesNetwork.kt
+  s_5373a0f018b70a::t_b3c0452aaae50b 16-51
+  s_5373a0f018b70a::t_56c2da91b126da 1-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/MoviesNetworkDataSource.kt
+  s_5373a0f018b70a::t_b3c0452aaae50b 16-31
+  s_5373a0f018b70a::t_5cb6aae15967ed 1-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/di/NetworkModule.kt
+  s_5373a0f018b70a::t_b3c0452aaae50b 16-96
+  s_5373a0f018b70a::t_b070ff06e85bdb 1-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/model/NetworkReview.kt
+  s_5373a0f018b70a::t_5876cbf41c287e 12,16-33
+  s_5373a0f018b70a::t_c1395cd8c5b13c 1-11,13-15
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/model/NetworkMovie.kt
+  s_5373a0f018b70a::t_5876cbf41c287e 16-31
+  s_5373a0f018b70a::t_50f8c9b78854f8 1-15
+core/network/build.gradle.kts
+  s_5373a0f018b70a::t_5876cbf41c287e 1-38
+settings.gradle.kts
+  s_5373a0f018b70a::t_d3e47f2d856c44 38-40,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "a68e55f4281c261ff441f8096c240673ee03c08f",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
