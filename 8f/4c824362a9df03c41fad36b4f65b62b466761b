@@ -1,0 +1,33 @@
+core/navigation/src/main/kotlin/com/practice/thenewmovies/core/navigation/NavigationState.kt
+  s_5373a0f018b70a::t_1e1f1ea000aacc 16-84
+  s_5373a0f018b70a::t_49bdfb6223d099 1-15
+core/navigation/build.gradle.kts
+  s_5373a0f018b70a::t_63e318ce41bfa9 1-18
+core/navigation/src/test/kotlin/com/practice/thenewmovies/core/navigation/NavigatorTest.kt
+  s_5373a0f018b70a::t_63e318ce41bfa9 16-115
+  s_5373a0f018b70a::t_c19d4facc5fcee 1-15
+core/navigation/src/main/kotlin/com/practice/thenewmovies/core/navigation/Navigator.kt
+  s_5373a0f018b70a::t_1e1f1ea000aacc 16-36
+  s_5373a0f018b70a::t_07c5c2cbe6207d 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "8f4c824362a9df03c41fad36b4f65b62b466761b",
+  "prompts": {},
+  "humans": {
+    "h_ed86a358b699c2": {
+      "author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  },
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
