@@ -60,6 +60,19 @@ the app does.
 - **Slice 0, Room plugin:** the plan hardcoded `compileOnly("androidx.room:room-gradle-plugin:2.7.1")`.
   Replaced with a `room-gradlePlugin` catalog entry so the version is declared once.
 
+- **Slice 2, instrumented tests ran zero tests (twice).** Two separate gaps in the library
+  convention plugin, both silent: no `testInstrumentationRunner` was set, so AGP used
+  `android.test.InstrumentationTestRunner` and found no JUnit4 tests; and once the runner was
+  declared, `androidx.test:runner` was missing from the androidTest classpath, so the runner class
+  itself threw `ClassNotFoundException` and the process crashed. Both fixed in
+  `AndroidLibraryConventionPlugin`, which fixes every library module at once. Note the first
+  failure mode reported `tests="0" failures="0"` — a green-looking zero.
+- **Slice 2, `asGenresJson`:** `json.encodeToString(list)` resolved to the two-argument overload
+  until `import kotlinx.serialization.encodeToString` was added for the reified extension.
+- **Slice 2, `core:data` manifest:** lint failed the build with `MissingPermission` because
+  `ConnectivityManager` is called in `core:data` while `ACCESS_NETWORK_STATE` was declared only in
+  `:app`. Added a library manifest declaring it.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:
@@ -68,7 +81,7 @@ Cumulative unit tests after each slice, useful as a smoke check that nothing was
 | --- | --- | --- |
 | 0 | 1 | — |
 | 1 | 8 | — |
-| 2 | 24 | 9 |
+| 2 | 47 | 9 |
 | 3 | 31 | 9 |
 | 4 | 42 | 9 |
 | 5 | 45 | 9 |
