@@ -50,6 +50,7 @@ include(":feature:detail:impl")
 include(":feature:home:api")
 include(":feature:home:impl")
 include(":feature:search:api")
+include(":feature:search:impl")
 include(":feature:watchlist:api")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
