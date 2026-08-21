@@ -42,6 +42,18 @@ the app does.
    interface + `internal` impl + `@Binds` pattern used everywhere else.
 7. **Java/Kotlin target 17, no core library desugaring.** Already recorded in the spec.
 
+## Corrections found while executing
+
+- **Slice 0, `core:common`:** the plan first declared `implementation(libs.hilt.android)`. That
+  artifact is an AAR and cannot resolve for a pure-JVM module — it fails with
+  `No matching variant of androidx.activity:activity:1.5.1`. Fixed to `libs.hilt.core`, which is
+  what the blueprint prescribes for JVM modules. Catalog entry `hilt-core` added.
+- **Slice 0, `MoviesDispatchersTest`:** a bare `@Dispatcher(...)` on a property lands on the
+  Kotlin property, not the Java field, so the reflective lookup returned null. Fixed to
+  `@field:Dispatcher(...)`.
+- **Slice 0, Room plugin:** the plan hardcoded `compileOnly("androidx.room:room-gradle-plugin:2.7.1")`.
+  Replaced with a `room-gradlePlugin` catalog entry so the version is declared once.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:

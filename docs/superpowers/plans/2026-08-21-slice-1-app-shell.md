@@ -44,13 +44,12 @@
 - Modify: `gradle/libs.versions.toml`
 - Modify: `settings.gradle.kts`
 
-- [ ] **Step 1: Add the Compose runtime library to the catalog**
+- [ ] **Step 1: Confirm the Compose runtime entries are in the catalog**
 
-`core:navigation` needs snapshot state but has no `@Composable` functions, so it takes the runtime artifact alone rather than the whole Compose plugin. Add under the `# Compose` group in `[libraries]`:
+`core:navigation` needs snapshot state but has no `@Composable` functions, so it takes the runtime artifact alone rather than the whole Compose plugin. Slice 0 already added `androidx-compose-runtime` and `androidx-compose-runtime-saveable` under the `# Compose` group — verify with:
 
-```toml
-androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
-androidx-compose-runtime-saveable = { module = "androidx.compose.runtime:runtime-saveable" }
+```bash
+grep compose-runtime gradle/libs.versions.toml
 ```
 
 - [ ] **Step 2: Add the new modules to `settings.gradle.kts`**
