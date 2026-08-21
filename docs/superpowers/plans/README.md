@@ -97,6 +97,20 @@ the app does.
   `Success` branch only, so the loading and error states had no back button. Hoisted it out of the
   `when` (bookmark hidden unless loaded) and added Retry to the error state.
 
+- **Slice 5, Spotless failed only under a parallel full build.** `:core:ui:spotlessXml` failed
+  with `Could not read path .../build/intermediates/merged_res/.../ic_call_decline_low.xml`, while
+  the same task passed in isolation and `core:ui` has no XML sources at all. Ant include patterns
+  filter Spotless's *results* but do not prune Gradle's directory walk, so it traversed `build/`
+  while resource merging was deleting intermediates. Fixed by targeting an explicit `fileTree`
+  that excludes `build/**`.
+- **Slice 5, the search test APK crashed before any test ran.**
+  `SecurityException: Permission denied (missing INTERNET permission?)` — the standalone test APK
+  has no INTERNET permission, and Coil's fetch inside `MovieRow` killed the instrumentation
+  process. Added `src/androidTest/AndroidManifest.xml` granting it.
+- **Slice 5, `PagingData.empty()` reports refresh = Loading.** An empty-results test asserted the
+  empty state but got the spinner, which is correct behaviour. The test now passes explicit
+  terminal `LoadStates`, and a separate test pins the fresh-query spinner.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:
@@ -108,7 +122,7 @@ Cumulative unit tests after each slice, useful as a smoke check that nothing was
 | 2 | 47 | 9 |
 | 3 | 65 | 9 |
 | 4 | 89 | 9 |
-| 5 | 45 | 9 |
+| 5 | 92 | 9 + 6 UI |
 | 6 | 49 | 9 |
 
 Counts are approximate — they assume no extra cases were added while implementing.
