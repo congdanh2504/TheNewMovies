@@ -73,6 +73,21 @@ the app does.
   `ConnectivityManager` is called in `core:data` while `ACCESS_NETWORK_STATE` was declared only in
   `:app`. Added a library manifest declaring it.
 
+- **Slice 3, `core:common` had no annotation processor.** `:app` failed with
+  `[Dagger/MissingBinding] @Dispatcher(IO) CoroutineDispatcher`. `core:common` declared
+  `hilt-core` but ran no KSP, so `DispatchersModule` produced no aggregating metadata and Hilt
+  never saw it. Added `ksp(libs.hilt.compiler)` to that module. The blueprint's `nowinandroid.hilt`
+  plugin handles JVM modules for exactly this reason; declared per-module here since `core:common`
+  is the only JVM module needing Hilt.
+- **Slice 3, `MoviesSearchBar` on Home.** The plan wrapped the bar in a `clickable` Box, but an
+  enabled `TextField` takes the tap and the parent never fires. Added an `enabled` parameter and
+  pass `false` on Home, where the bar is a button.
+- **Slice 3, Home spun forever when the API was unreachable.** `HomeUiState` only reported `Error`
+  for `!isOnline`, so an online device whose refreshes all fail (blocked network, TMDB down, bad
+  key) sat on the spinner indefinitely. Added a `refreshFailed` flow, a `LOAD_FAILED_MESSAGE`
+  error state and a Retry button, plus two tests. Found by running against a network that blocks
+  TMDB.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:
@@ -82,7 +97,7 @@ Cumulative unit tests after each slice, useful as a smoke check that nothing was
 | 0 | 1 | — |
 | 1 | 8 | — |
 | 2 | 47 | 9 |
-| 3 | 31 | 9 |
+| 3 | 65 | 9 |
 | 4 | 42 | 9 |
 | 5 | 45 | 9 |
 | 6 | 49 | 9 |

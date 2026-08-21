@@ -32,6 +32,7 @@ dependencies {
     implementation(projects.core.navigation)
     implementation(projects.feature.detail.api)
     implementation(projects.feature.home.api)
+    implementation(projects.feature.home.impl)
     implementation(projects.feature.search.api)
     implementation(projects.feature.watchlist.api)
 

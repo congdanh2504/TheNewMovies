@@ -1,0 +1,33 @@
+/*
+ * Copyright 2026 TheNewMovies
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.practice.thenewmovies.feature.home.impl.navigation
+
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import com.practice.thenewmovies.core.navigation.Navigator
+import com.practice.thenewmovies.feature.detail.api.navigateToDetail
+import com.practice.thenewmovies.feature.home.api.HomeNavKey
+import com.practice.thenewmovies.feature.home.impl.HomeScreen
+import com.practice.thenewmovies.feature.search.api.navigateToSearch
+
+fun EntryProviderScope<NavKey>.homeEntry(navigator: Navigator) {
+    entry<HomeNavKey> {
+        HomeScreen(
+            onMovieClick = navigator::navigateToDetail,
+            onSearchClick = navigator::navigateToSearch,
+        )
+    }
+}

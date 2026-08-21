@@ -45,6 +45,7 @@ fun MoviesSearchBar(
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "Search",
+    enabled: Boolean = true,
 ) {
     Box(
         modifier = modifier
@@ -72,6 +73,9 @@ fun MoviesSearchBar(
                     )
                 },
                 modifier = Modifier.weight(1f),
+                // Disabled on Home, where the bar is a button that navigates to search: an
+                // enabled TextField would take the tap instead of the parent clickable.
+                enabled = enabled,
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
