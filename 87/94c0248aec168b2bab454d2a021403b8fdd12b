@@ -1,0 +1,29 @@
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt
+  s_5373a0f018b70a::t_9a326b4878a546 16-57
+  s_5373a0f018b70a::t_be8c9526c18ba2 1-15
+core/data/src/test/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepositoryTest.kt
+  s_5373a0f018b70a::t_4132a90b3f5b3a 16-83
+  s_5373a0f018b70a::t_0c0e2f3398c72d 1-15
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepository.kt
+  s_5373a0f018b70a::t_9a326b4878a546 16-46
+  s_5373a0f018b70a::t_09574dd0828b6a 1-15
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/util/ConnectivityManagerNetworkMonitor.kt
+  s_5373a0f018b70a::t_9a326b4878a546 16-77
+  s_5373a0f018b70a::t_0d0af946c4ce57 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "8794c0248aec168b2bab454d2a021403b8fdd12b",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
