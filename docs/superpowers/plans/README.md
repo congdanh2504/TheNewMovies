@@ -51,6 +51,12 @@ the app does.
 - **Slice 0, `MoviesDispatchersTest`:** a bare `@Dispatcher(...)` on a property lands on the
   Kotlin property, not the Java field, so the reflective lookup returned null. Fixed to
   `@field:Dispatcher(...)`.
+- **Slice 1, back at a tab root:** the plan's `MoviesApp` relied on `NavDisplay`'s `onBack` to
+  reach `Navigator.goBack()`. `NavDisplay` only dispatches back when its own stack has more than
+  one entry, so at a tab root back fell through and finished the activity — pressing back on Watch
+  List exited the app instead of returning to Home. `NavigatorTest` passed throughout because it
+  calls `goBack()` directly; the gap was app-level wiring. Fixed with a `BackHandler` enabled for
+  exactly that case (tab root, not the first tab).
 - **Slice 0, Room plugin:** the plan hardcoded `compileOnly("androidx.room:room-gradle-plugin:2.7.1")`.
   Replaced with a `room-gradlePlugin` catalog entry so the version is declared once.
 

@@ -1,0 +1,24 @@
+<!--
+  Copyright 2026 TheNewMovies
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+  <path
+      android:pathData="M20.681,25.5C20.515,25.5 20.349,25.439 20.218,25.31L14.527,19.669C13.602,18.752 13.602,17.246 14.527,16.329L20.218,10.688C20.471,10.437 20.89,10.437 21.143,10.688C21.397,10.939 21.397,11.354 21.143,11.605L15.453,17.246C15.033,17.662 15.033,18.336 15.453,18.752L21.143,24.393C21.397,24.643 21.397,25.059 21.143,25.31C21.013,25.431 20.847,25.5 20.681,25.5Z"
+      android:fillColor="#ffffff"/>
+</vector>
