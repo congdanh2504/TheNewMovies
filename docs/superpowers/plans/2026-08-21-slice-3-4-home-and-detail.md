@@ -836,7 +836,8 @@ internal fun HomeScreen(
                 .clickable(onClick = onSearchClick),
         ) {
             // The home search bar is a button: typing happens on the search screen.
-            MoviesSearchBar(query = "", onQueryChange = {})
+            // `enabled = false` is required, or the TextField takes the tap instead of this Box.
+            MoviesSearchBar(query = "", onQueryChange = {}, enabled = false)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
