@@ -1,0 +1,23 @@
+docs/superpowers/plans/2026-08-21-slice-0-foundation.md
+  s_5373a0f018b70a::t_d15aff630ae977 184-185,207,217,349,783-784,1229-1230,1254-1256
+docs/superpowers/plans/2026-08-21-slice-1-app-shell.md
+  s_5373a0f018b70a::t_d15aff630ae977 47,49,51-52
+docs/superpowers/plans/README.md
+  s_5373a0f018b70a::t_3ffb35f4ecb0e5 45-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "683181da4bacbb4a0a62b2c1fa79ed6758253f33",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
