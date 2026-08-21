@@ -15,6 +15,7 @@
  */
 package com.practice.thenewmovies.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,6 +76,16 @@ fun MoviesApp() {
 
     val backStack = navigator.state.backStack
     val showBottomBar = backStack.last() in navigator.state.topLevelKeys
+
+    // NavDisplay only dispatches back when its own stack has more than one entry, so at a tab
+    // root it lets back fall through and finish the activity. Handle exactly that case here:
+    // back from a non-first tab returns to the first tab; from the first tab it exits, as it should.
+    BackHandler(
+        enabled = backStack.size == 1 &&
+            navigator.state.currentTopLevelKey != navigator.state.topLevelKeys.first(),
+    ) {
+        navigator.goBack()
+    }
 
     Scaffold(
         bottomBar = {
