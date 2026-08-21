@@ -1,0 +1,37 @@
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestMoviesRepository.kt
+  s_5373a0f018b70a::t_ac55d8d9f6dec1 16-84
+  s_5373a0f018b70a::t_1fc1e9c01b40e8 1-15
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/data/TestMovies.kt
+  s_5373a0f018b70a::t_79c15e12a7e0ce 11,16-82
+  s_5373a0f018b70a::t_6489a4ca64ca0e 1-10,12-15
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/MainDispatcherRule.kt
+  s_5373a0f018b70a::t_79c15e12a7e0ce 16-38
+  s_5373a0f018b70a::t_0299d26a6108af 1-15
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestNetworkMonitor.kt
+  s_5373a0f018b70a::t_ac55d8d9f6dec1 16-31
+  s_5373a0f018b70a::t_4a93d165a8b232 1-15
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestUserPreferencesRepository.kt
+  s_5373a0f018b70a::t_ac55d8d9f6dec1 16-32
+  s_5373a0f018b70a::t_c9128972524b32 1-15
+core/testing/build.gradle.kts
+  s_5373a0f018b70a::t_79c15e12a7e0ce 1-18
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestWatchlistRepository.kt
+  s_5373a0f018b70a::t_ac55d8d9f6dec1 16-53
+  s_5373a0f018b70a::t_07638cbc948f9a 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "63214c82ff40add6618d08e1c1b6072d26506901",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
