@@ -1,0 +1,42 @@
+README.md
+  s_5373a0f018b70a::t_9c162da84fe15f 1-121
+app/build.gradle.kts
+  s_5373a0f018b70a::t_b32e07ea49293c 40
+app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt
+  s_5373a0f018b70a::t_b32e07ea49293c 57,115
+feature/watchlist/impl/src/test/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModelTest.kt
+  s_5373a0f018b70a::t_504e3aff68a6bc 16-76
+  s_5373a0f018b70a::t_24d619632a7d70 1-15
+feature/watchlist/impl/build.gradle.kts
+  s_5373a0f018b70a::t_504e3aff68a6bc 1-13
+feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModel.kt
+  s_5373a0f018b70a::t_f4268de760865c 16-42
+  s_5373a0f018b70a::t_24d619632a7d70 1-15
+feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistScreen.kt
+  s_5373a0f018b70a::t_7609ab1f496e1d 16-197
+  s_5373a0f018b70a::t_24d619632a7d70 1-15
+feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistUiState.kt
+  s_5373a0f018b70a::t_504e3aff68a6bc 16-24
+  s_5373a0f018b70a::t_24d619632a7d70 1-15
+feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/navigation/WatchlistEntry.kt
+  s_5373a0f018b70a::t_24d619632a7d70 1-15
+  s_5373a0f018b70a::t_b32e07ea49293c 16-32
+settings.gradle.kts
+  s_5373a0f018b70a::t_1ec3ad454f4ad1 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "57fe63ca9ddf88b4329d4ee26cd3f8de8bc8badf",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
