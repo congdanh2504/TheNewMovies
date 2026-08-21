@@ -181,6 +181,8 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 # Compose
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-runtime-saveable = { module = "androidx.compose.runtime:runtime-saveable" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -202,6 +204,7 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 
 # DI
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -211,6 +214,7 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+room-gradlePlugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
@@ -342,6 +346,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.spotless.gradlePlugin)
+    compileOnly(libs.room.gradlePlugin)
 }
 
 gradlePlugin {
@@ -775,11 +780,8 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
 }
 ```
 
-The Room Gradle plugin class must be on the build-logic classpath. Add it to `build-logic/convention/build.gradle.kts` dependencies:
-
-```kotlin
-    compileOnly("androidx.room:room-gradle-plugin:2.7.1")
-```
+The Room Gradle plugin class is already on the build-logic classpath via
+`compileOnly(libs.room.gradlePlugin)` in Task 3.
 
 - [ ] **Step 6: Write `JvmLibraryConventionPlugin.kt`**
 
@@ -1224,7 +1226,8 @@ plugins {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.javax.inject)
-    implementation(libs.hilt.android)
+    // hilt-core, NOT hilt-android: the latter is an AAR and cannot resolve for a JVM module.
+    implementation(libs.hilt.core)
 }
 ```
 
@@ -1248,7 +1251,9 @@ class MoviesDispatchersTest {
     }
 
     private class Holder {
-        @Dispatcher(MoviesDispatchers.IO)
+        // `@field:` is required: a bare property annotation lands on the Kotlin property,
+        // not the Java field, so reflection over the field would find nothing.
+        @field:Dispatcher(MoviesDispatchers.IO)
         @JvmField
         var value: Int = 0
     }
