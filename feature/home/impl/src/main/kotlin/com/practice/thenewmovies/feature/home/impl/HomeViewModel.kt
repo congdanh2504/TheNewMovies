@@ -22,6 +22,7 @@ import com.practice.thenewmovies.core.data.util.NetworkMonitor
 import com.practice.thenewmovies.core.datastore.UserPreferencesRepository
 import com.practice.thenewmovies.core.model.MovieCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val OFFLINE_MESSAGE = "No data available offline"
+private const val LOAD_FAILED_MESSAGE = "Couldn't load movies. Check your connection."
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
@@ -39,23 +41,37 @@ internal class HomeViewModel @Inject constructor(
     networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
-    val uiState: StateFlow<HomeUiState> = combine(
+    private val refreshFailed = MutableStateFlow(false)
+
+    private val movies = combine(
         moviesRepository.getMovies(MovieCategory.NOW_PLAYING),
         moviesRepository.getMovies(MovieCategory.UPCOMING),
         moviesRepository.getMovies(MovieCategory.TOP_RATED),
         moviesRepository.getMovies(MovieCategory.POPULAR),
+    ) { nowPlaying, upcoming, topRated, popular ->
+        HomeUiState.Success(
+            nowPlaying = nowPlaying,
+            upcoming = upcoming,
+            topRated = topRated,
+            popular = popular,
+        )
+    }
+
+    val uiState: StateFlow<HomeUiState> = combine(
+        movies,
         networkMonitor.isOnline,
-    ) { nowPlaying, upcoming, topRated, popular, isOnline ->
-        val hasMovies = listOf(nowPlaying, upcoming, topRated, popular).any { it.isNotEmpty() }
+        refreshFailed,
+    ) { loaded, isOnline, failed ->
+        val hasMovies = listOf(loaded.nowPlaying, loaded.upcoming, loaded.topRated, loaded.popular)
+            .any { it.isNotEmpty() }
         when {
-            hasMovies -> HomeUiState.Success(
-                nowPlaying = nowPlaying,
-                upcoming = upcoming,
-                topRated = topRated,
-                popular = popular,
-            )
+            hasMovies -> loaded
 
             !isOnline -> HomeUiState.Error(OFFLINE_MESSAGE)
+
+            // Online but every refresh failed and nothing is cached: without this the screen
+            // spins forever whenever the API is unreachable.
+            failed -> HomeUiState.Error(LOAD_FAILED_MESSAGE)
 
             else -> HomeUiState.Loading
         }
@@ -90,8 +106,9 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun refresh() {
-        MovieCategory.entries.forEach { category ->
-            viewModelScope.launch { moviesRepository.refresh(category) }
+        viewModelScope.launch {
+            val results = MovieCategory.entries.map { moviesRepository.refresh(it) }
+            refreshFailed.value = results.none { it }
         }
     }
 }

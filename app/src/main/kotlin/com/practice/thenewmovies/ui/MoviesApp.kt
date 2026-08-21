@@ -50,6 +50,7 @@ import com.practice.thenewmovies.core.navigation.NavigationState
 import com.practice.thenewmovies.core.navigation.Navigator
 import com.practice.thenewmovies.feature.detail.api.DetailNavKey
 import com.practice.thenewmovies.feature.home.api.HomeNavKey
+import com.practice.thenewmovies.feature.home.impl.navigation.homeEntry
 import com.practice.thenewmovies.feature.search.api.SearchNavKey
 import com.practice.thenewmovies.feature.watchlist.api.WatchlistNavKey
 import com.practice.thenewmovies.navigation.TopLevelNavItem
@@ -108,7 +109,7 @@ fun MoviesApp() {
             ),
             entryProvider = entryProvider {
                 // Replaced one at a time by slices 3-6.
-                entry<HomeNavKey> { Placeholder("Home") }
+                homeEntry(navigator)
                 entry<SearchNavKey> { Placeholder("Search") }
                 entry<WatchlistNavKey> { Placeholder("Watch List") }
                 entry<DetailNavKey> { key -> Placeholder("Detail ${key.movieId}") }

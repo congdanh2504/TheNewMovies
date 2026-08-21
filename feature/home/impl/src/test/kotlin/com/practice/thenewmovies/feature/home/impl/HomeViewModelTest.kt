@@ -93,6 +93,28 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `reports an error when online but every refresh fails`() = runTest {
+        moviesRepository.refreshSucceeds = false
+        val viewModel = viewModel()
+
+        viewModel.uiState.test {
+            assertEquals(
+                HomeUiState.Error("Couldn't load movies. Check your connection."),
+                expectMostRecentItem(),
+            )
+        }
+    }
+
+    @Test
+    fun `stays in loading while a refresh is still succeeding`() = runTest {
+        val viewModel = viewModel()
+
+        viewModel.uiState.test {
+            assertEquals(HomeUiState.Loading, expectMostRecentItem())
+        }
+    }
+
+    @Test
     fun `exposes offline state`() = runTest {
         val viewModel = viewModel()
 
