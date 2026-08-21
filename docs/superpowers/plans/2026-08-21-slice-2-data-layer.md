@@ -941,6 +941,9 @@ import com.practice.thenewmovies.core.model.Genre
 import com.practice.thenewmovies.core.model.MovieDetail
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+// Required for the reified `encodeToString(value)`; without it the call resolves to the
+// two-argument overload and fails to compile.
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -1702,7 +1705,22 @@ interface NetworkMonitor {
 }
 ```
 
-- [ ] **Step 9: Commit**
+- [ ] **Step 9: Declare the connectivity permission in this module**
+
+`ConnectivityManagerNetworkMonitor` calls `ConnectivityManager`, and lint fails the build if the
+permission is only declared in `:app`. Create `core/data/src/main/AndroidManifest.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Required by ConnectivityManagerNetworkMonitor. Declared here rather than only in :app so
+         the requirement travels with the code that needs it. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</manifest>
+```
+
+- [ ] **Step 10: Commit**
 
 ```bash
 ./gradlew spotlessApply

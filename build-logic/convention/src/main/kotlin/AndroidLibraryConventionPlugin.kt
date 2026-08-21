@@ -1,4 +1,5 @@
 import com.android.build.gradle.LibraryExtension
+import com.practice.thenewmovies.buildlogic.androidTestImplementation
 import com.practice.thenewmovies.buildlogic.configureKotlinAndroid
 import com.practice.thenewmovies.buildlogic.configureSpotless
 import com.practice.thenewmovies.buildlogic.get
@@ -20,6 +21,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         extensions.configure<LibraryExtension> {
             configureKotlinAndroid(this)
             defaultConfig.targetSdk = ProjectConfigure.TARGET_SDK
+            // Without this AGP falls back to android.test.InstrumentationTestRunner, which finds
+            // no JUnit4 tests and reports a green run of zero tests.
+            defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             resourcePrefix = resourcePrefixFromPath()
             testOptions.animationsDisabled = true
         }
@@ -28,6 +32,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             testImplementation(libs["junit"])
             testImplementation(libs["kotlinx.coroutines.test"])
             testImplementation(libs["turbine"])
+            // Pairs with the testInstrumentationRunner above: androidx.test.ext:junit does not
+            // bring the runner artifact transitively, so the runner class would be missing at
+            // runtime and every instrumented test would crash before starting.
+            androidTestImplementation(libs["androidx.test.runner"])
         }
 
         configureSpotless()
