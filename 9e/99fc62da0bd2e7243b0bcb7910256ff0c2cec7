@@ -1,0 +1,29 @@
+.editorconfig
+  s_5373a0f018b70a::t_529b5ae039d12c 1-23
+build.gradle.kts
+  s_5373a0f018b70a::t_73832765a48412 1-12
+settings.gradle.kts
+  s_5373a0f018b70a::t_3cbc65d8da47eb 1-41
+spotless/copyright.kt
+  s_5373a0f018b70a::t_9484d737f0945a 1-15
+spotless/copyright.kts
+  s_5373a0f018b70a::t_69eabc61efedaa 1-15
+spotless/copyright.xml
+  s_5373a0f018b70a::t_5c27ca62155c22 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "9e99fc62da0bd2e7243b0bcb7910256ff0c2cec7",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
