@@ -1816,11 +1816,8 @@ internal fun DetailScreen(
                     isOffline = isOffline,
                     onRateClick = onRateClick,
                 )
-                DetailToolbar(
-                    isInWatchlist = uiState.isInWatchlist,
-                    onBackClick = onBackClick,
-                    onBookmarkClick = onBookmarkClick,
-                )
+                // NOTE: as implemented, the toolbar is hoisted OUT of this `when` so that the
+                // loading and error states also have a back button — see the final code.
                 if (showRatingSheet) {
                     RatingSheet(
                         initialRating = uiState.userRating ?: uiState.detail.voteAverage.toFloat(),

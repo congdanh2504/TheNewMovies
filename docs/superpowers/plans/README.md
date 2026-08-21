@@ -88,6 +88,15 @@ the app does.
   error state and a Retry button, plus two tests. Found by running against a network that blocks
   TMDB.
 
+- **Slice 4, extended icons missing from features.** `:feature:detail:impl` failed on
+  `Unresolved reference 'Bookmark'` etc. `core:ui` keeps `material-icons-extended` as
+  `implementation` so it does not leak, yet its `MetaLabel` and `MoviesEmptyState` take
+  `ImageVector` parameters — so every feature needs the artifact. Added to
+  `AndroidFeatureImplConventionPlugin`.
+- **Slice 4, Detail trapped the user on failure.** The plan rendered `DetailToolbar` inside the
+  `Success` branch only, so the loading and error states had no back button. Hoisted it out of the
+  `when` (bookmark hidden unless loaded) and added Retry to the error state.
+
 ## Test counts by slice
 
 Cumulative unit tests after each slice, useful as a smoke check that nothing was skipped:
@@ -98,7 +107,7 @@ Cumulative unit tests after each slice, useful as a smoke check that nothing was
 | 1 | 8 | — |
 | 2 | 47 | 9 |
 | 3 | 65 | 9 |
-| 4 | 42 | 9 |
+| 4 | 89 | 9 |
 | 5 | 45 | 9 |
 | 6 | 49 | 9 |
 
