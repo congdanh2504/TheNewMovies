@@ -1,0 +1,36 @@
+core/data/build.gradle.kts
+  s_5373a0f018b70a::t_8164d8e3ddd836 1-21
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/model/NetworkModel.kt
+  s_5373a0f018b70a::t_70bf23e0118d3e 16-30
+  s_5373a0f018b70a::t_8bc871d6799d22 1-15
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/model/NetworkEntity.kt
+  s_5373a0f018b70a::t_70bf23e0118d3e 16-84
+  s_5373a0f018b70a::t_073724507df009 1-15
+core/data/src/test/kotlin/com/practice/thenewmovies/core/data/model/NetworkEntityTest.kt
+  s_5373a0f018b70a::t_8164d8e3ddd836 16-64
+  s_5373a0f018b70a::t_2016c3bd905867 1-15
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/MoviesRepository.kt
+  s_5373a0f018b70a::t_cc2175ed190306 1-47
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/WatchlistRepository.kt
+  s_5373a0f018b70a::t_b8bb4d4538a20e 1-28
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/util/Clock.kt
+  s_5373a0f018b70a::t_01b07a12b3ebd4 1-21
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/util/NetworkMonitor.kt
+  s_5373a0f018b70a::t_17e859bb6cc75a 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "5894340b367cb22d5ccc93470bec2362737e75d9",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
