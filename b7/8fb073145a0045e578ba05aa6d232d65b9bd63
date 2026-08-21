@@ -1,0 +1,37 @@
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/MovieCategory.kt
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-23
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/WatchlistMovie.kt
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-28
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+core/model/build.gradle.kts
+  s_5373a0f018b70a::t_4b15f85687e0cf 1-3
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/Cast.kt
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-23
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/MovieDetail.kt
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-38
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/Movie.kt
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-27
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/Review.kt
+  s_5373a0f018b70a::t_4b15f85687e0cf 16-24
+  s_5373a0f018b70a::t_25b56e938e2f74 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "b78fb073145a0045e578ba05aa6d232d65b9bd63",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
