@@ -1,0 +1,19 @@
+build-logic/convention/src/main/kotlin/com/practice/thenewmovies/buildlogic/Spotless.kt
+  s_5373a0f018b70a::t_3bbb3a3d3708bd 5,8-19,29,35,41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c2863878cff2351fd9d42c1ee08a21eda9cedd16",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
