@@ -1,0 +1,20 @@
+core/data/src/main/AndroidManifest.xml
+  s_5373a0f018b70a::t_21744545943067 1-15
+  s_5373a0f018b70a::t_af0a3bb67a4468 16-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "5df7b2a80fd421ead6fdc259e67671fa550d051c",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
