@@ -20,7 +20,6 @@ import com.practice.thenewmovies.core.network.MoviesNetworkDataSource
 import com.practice.thenewmovies.core.network.retrofit.RetrofitMoviesNetwork
 import com.practice.thenewmovies.core.network.retrofit.TmdbApi
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -43,9 +42,7 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun providesMoshi(): Moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    fun providesMoshi(): Moshi = Moshi.Builder().build()
 
     @Provides
     @Singleton

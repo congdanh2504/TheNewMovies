@@ -31,7 +31,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
+    // Codegen, not reflection: the DTOs already carry @JsonClass(generateAdapter = true), and a
+    // reflective KotlinJsonAdapterFactory silently stops parsing once R8 renames their fields.
+    ksp(libs.moshi.kotlin.codegen)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.core)
