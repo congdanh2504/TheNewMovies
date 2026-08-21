@@ -1,0 +1,50 @@
+core/designsystem/src/main/res/drawable/core_designsystem_ic_back_icon.xml
+  s_5373a0f018b70a::t_3cbc8c94bbcc97 16-24
+  s_5373a0f018b70a::t_65763d5bc85a89 1-15
+core/designsystem/src/main/res/drawable/core_designsystem_ic_search_left.xml
+  s_5373a0f018b70a::t_3cbc8c94bbcc97 9-12,16-35
+  s_5373a0f018b70a::t_8f40f45b81b525 1-8,13-15
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/theme/Color.kt
+  s_5373a0f018b70a::t_fff0aad70c02fc 16-24
+  s_5373a0f018b70a::t_c605587caf24f4 1-15
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/theme/Type.kt
+  s_5373a0f018b70a::t_815bbcee423ce7 16-114
+  s_5373a0f018b70a::t_0acc37a949d5f5 1-15
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/component/MoviesSearchBar.kt
+  s_5373a0f018b70a::t_7c02e932f6cfe5 16-104
+  s_5373a0f018b70a::t_2c3572d8333d6c 1-15
+settings.gradle.kts
+  s_5373a0f018b70a::t_5707994fb3a394 36,38-44
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/icon/MoviesIcons.kt
+  s_5373a0f018b70a::t_fff0aad70c02fc 16-23
+  s_5373a0f018b70a::t_43fa8673b146b4 1-15
+core/designsystem/build.gradle.kts
+  s_5373a0f018b70a::t_3cbc8c94bbcc97 1-12
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/component/MoviesTopAppBar.kt
+  s_5373a0f018b70a::t_d21535410f7207 16-90
+  s_5373a0f018b70a::t_28ef71f3fba405 1-15
+core/designsystem/src/main/kotlin/com/practice/thenewmovies/core/designsystem/theme/Theme.kt
+  s_5373a0f018b70a::t_fff0aad70c02fc 16-38
+  s_5373a0f018b70a::t_7434a47f36e70f 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "3c1470893241e7856a03ce2862c93e575f6fb305",
+  "prompts": {},
+  "humans": {
+    "h_ed86a358b699c2": {
+      "author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  },
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
