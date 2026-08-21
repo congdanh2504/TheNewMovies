@@ -1,0 +1,23 @@
+gradle/libs.versions.toml
+  s_5373a0f018b70a::t_0371535cb0ef03 94
+core/network/build.gradle.kts
+  s_5373a0f018b70a::t_0371535cb0ef03 34-36
+core/network/src/main/kotlin/com/practice/thenewmovies/core/network/di/NetworkModule.kt
+  s_5373a0f018b70a::t_0371535cb0ef03 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "6f3f8aa537c22aeffa8fc3b5552c1845c7dad52e",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
