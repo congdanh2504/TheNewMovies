@@ -48,7 +48,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.practice.thenewmovies.core.navigation.NavigationState
 import com.practice.thenewmovies.core.navigation.Navigator
-import com.practice.thenewmovies.feature.detail.api.DetailNavKey
+import com.practice.thenewmovies.feature.detail.impl.navigation.detailEntry
 import com.practice.thenewmovies.feature.home.api.HomeNavKey
 import com.practice.thenewmovies.feature.home.impl.navigation.homeEntry
 import com.practice.thenewmovies.feature.search.api.SearchNavKey
@@ -112,7 +112,7 @@ fun MoviesApp() {
                 homeEntry(navigator)
                 entry<SearchNavKey> { Placeholder("Search") }
                 entry<WatchlistNavKey> { Placeholder("Watch List") }
-                entry<DetailNavKey> { key -> Placeholder("Detail ${key.movieId}") }
+                detailEntry(navigator)
             },
         )
     }
