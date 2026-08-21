@@ -1,0 +1,26 @@
+core/database/src/androidTest/kotlin/com/practice/thenewmovies/core/database/dao/WatchlistDaoTest.kt
+  s_5373a0f018b70a::t_587e0e2136454d 16-96
+  s_5373a0f018b70a::t_c56e8aeb250135 1-15
+core/database/src/androidTest/kotlin/com/practice/thenewmovies/core/database/dao/MovieDaoTest.kt
+  s_5373a0f018b70a::t_587e0e2136454d 16-107
+  s_5373a0f018b70a::t_ff63c903c40e45 1-15
+build-logic/convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt
+  s_5373a0f018b70a::t_3be81982f7ccc7 2,35-38
+  s_5373a0f018b70a::t_292e14bad3eed8 24-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "619fdc76d33f74c83b97aee2b7389e3f98dab903",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
