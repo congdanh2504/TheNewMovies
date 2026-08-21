@@ -19,6 +19,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -100,11 +101,17 @@ fun MoviesApp() {
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,
+        // Zero content insets: screens handle their own system-bar padding, so Detail can draw
+        // its backdrop behind the status bar. Padding the whole NavDisplay would box every
+        // screen inside the system bars and make edge-to-edge impossible.
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         NavDisplay(
             backStack = backStack,
             onBack = { navigator.goBack() },
-            modifier = Modifier.padding(innerPadding),
+            // Only the bottom inset is shared: it is the bottom bar's height, and it is zero
+            // on screens that hide the bar.
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),

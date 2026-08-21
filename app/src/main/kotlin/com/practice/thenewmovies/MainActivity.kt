@@ -15,8 +15,10 @@
  */
 package com.practice.thenewmovies
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
@@ -27,8 +29,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        // Dark styles for both bars: the default enforces a light contrast scrim behind the
+        // gesture navigation bar, which shows as a grey band over the app's dark content.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        )
         setContent {
             MoviesTheme {
                 MoviesApp()
