@@ -33,8 +33,15 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "TheNewMovies"
 
-include(":core:model")
+include(":app")
 include(":core:common")
+include(":core:designsystem")
+include(":core:model")
+include(":core:navigation")
+include(":feature:detail:api")
+include(":feature:home:api")
+include(":feature:search:api")
+include(":feature:watchlist:api")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     "Requires JDK 17+ but is using JDK ${JavaVersion.current()}"
