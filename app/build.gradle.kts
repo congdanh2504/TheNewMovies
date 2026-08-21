@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.feature.search.api)
     implementation(projects.feature.search.impl)
     implementation(projects.feature.watchlist.api)
+    implementation(projects.feature.watchlist.impl)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)

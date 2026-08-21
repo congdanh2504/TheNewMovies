@@ -54,6 +54,7 @@ import com.practice.thenewmovies.feature.home.impl.navigation.homeEntry
 import com.practice.thenewmovies.feature.search.api.SearchNavKey
 import com.practice.thenewmovies.feature.search.impl.navigation.searchEntry
 import com.practice.thenewmovies.feature.watchlist.api.WatchlistNavKey
+import com.practice.thenewmovies.feature.watchlist.impl.navigation.watchlistEntry
 import com.practice.thenewmovies.navigation.TopLevelNavItem
 
 @Composable
@@ -109,20 +110,12 @@ fun MoviesApp() {
                 rememberViewModelStoreNavEntryDecorator(),
             ),
             entryProvider = entryProvider {
-                // Replaced one at a time by slices 3-6.
                 homeEntry(navigator)
                 searchEntry(navigator)
-                entry<WatchlistNavKey> { Placeholder("Watch List") }
+                watchlistEntry(navigator)
                 detailEntry(navigator)
             },
         )
-    }
-}
-
-@Composable
-private fun Placeholder(name: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = name, style = MaterialTheme.typography.headlineSmall, color = Color.White)
     }
 }
 

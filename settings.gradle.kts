@@ -52,6 +52,7 @@ include(":feature:home:impl")
 include(":feature:search:api")
 include(":feature:search:impl")
 include(":feature:watchlist:api")
+include(":feature:watchlist:impl")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     "Requires JDK 17+ but is using JDK ${JavaVersion.current()}"
