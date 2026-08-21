@@ -1,0 +1,42 @@
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/OfflineBanner.kt
+  s_5373a0f018b70a::t_f4bba695018ed2 16-53
+  s_5373a0f018b70a::t_20b7a142f691d6 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/MoviesEmptyState.kt
+  s_5373a0f018b70a::t_f4bba695018ed2 16-87
+  s_5373a0f018b70a::t_b5a531815add3c 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/MoviePoster.kt
+  s_5373a0f018b70a::t_48a797fa445147 16-46
+  s_5373a0f018b70a::t_98337b0ba24488 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/DevicePreviews.kt
+  s_5373a0f018b70a::t_f4bba695018ed2 16-23
+  s_5373a0f018b70a::t_e4a141259eb18a 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/MovieRow.kt
+  s_5373a0f018b70a::t_f4bba695018ed2 16-76
+  s_5373a0f018b70a::t_ff7d71c14e408d 1-15
+core/ui/build.gradle.kts
+  s_5373a0f018b70a::t_48a797fa445147 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/MetaLabel.kt
+  s_5373a0f018b70a::t_48a797fa445147 16-54
+  s_5373a0f018b70a::t_3c46cad459d232 1-15
+core/ui/src/main/kotlin/com/practice/thenewmovies/core/ui/component/RatingChip.kt
+  s_5373a0f018b70a::t_48a797fa445147 16-70
+  s_5373a0f018b70a::t_15de6fa1b5695d 1-15
+settings.gradle.kts
+  s_5373a0f018b70a::t_48a797fa445147 46,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "847d9436304c6382e9cbf1f2301a7683c8f0286a",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
