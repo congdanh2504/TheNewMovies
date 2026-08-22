@@ -29,7 +29,10 @@ class TestAuthRepository : AuthRepository {
 
     override val sessionState: Flow<SessionState> = state
 
-    /** Set to non-null to make the next call of every method fail with this error. */
+    /**
+     * Set to non-null to make every call fail with this error until reset back to `null`.
+     * [signOut] never consults it, since sign-out always succeeds locally.
+     */
     var nextError: AuthError? = null
 
     val signUpCalls = mutableListOf<Pair<String, String>>()
@@ -39,6 +42,13 @@ class TestAuthRepository : AuthRepository {
     var signOutCount = 0
         private set
 
+    /**
+     * Unlike the production repository — where [sessionState] is driven independently by
+     * supabase's own session flow — this fake emits [SessionState.SignedIn] synchronously on
+     * success, same as [signIn]. That coupling is what makes the signed-in path testable here,
+     * but a test asserting [sessionState] becomes [SessionState.SignedIn] after this call
+     * succeeds is exercising the fake's wiring, not any production behaviour.
+     */
     override suspend fun signUp(email: String, password: String): AuthResult {
         signUpCalls += email to password
         return result { emitSignedIn(email) }
