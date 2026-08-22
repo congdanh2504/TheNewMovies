@@ -42,6 +42,8 @@ internal class SupabaseAuthRepository @Inject constructor(
     override val sessionState: Flow<SessionState> = client.auth.sessionStatus.map { status ->
         when (status) {
             is SessionStatus.Authenticated ->
+                // A session with no user record is unusable for anything the app needs, so it
+                // is folded into the same SignedOut bucket as SessionStatus.NotAuthenticated.
                 status.session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
 
             is SessionStatus.Initializing -> SessionState.Loading
@@ -91,8 +93,8 @@ internal class SupabaseAuthRepository @Inject constructor(
             try {
                 block()
                 AuthResult.Success
-            } catch (throwable: Throwable) {
-                AuthResult.Failure(throwable.toAuthError())
+            } catch (exception: Exception) {
+                AuthResult.Failure(exception.toAuthError())
             }
         }
 

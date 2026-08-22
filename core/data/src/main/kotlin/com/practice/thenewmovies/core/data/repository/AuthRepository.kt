@@ -31,7 +31,13 @@ interface AuthRepository {
     /** Sends a recovery mail containing a 6-digit code. */
     suspend fun sendPasswordReset(email: String): AuthResult
 
-    /** Verifies the recovery code, then sets [newPassword] on the account. */
+    /**
+     * Verifies the recovery code, then sets [newPassword] on the account.
+     *
+     * Verifying the code authenticates the session before the password is changed, so a failure
+     * from the second step leaves the user signed in with their old password still valid —
+     * callers must not assume [AuthResult.Failure] means nothing happened.
+     */
     suspend fun resetPassword(email: String, code: String, newPassword: String): AuthResult
 
     /**
