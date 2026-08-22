@@ -1,0 +1,26 @@
+feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/SignUpScreen.kt
+  s_5373a0f018b70a::t_b69d6216b87b4f 1-15
+  s_5373a0f018b70a::t_26277a03a49193 16-168
+feature/auth/impl/src/test/kotlin/com/practice/thenewmovies/feature/auth/impl/SignUpViewModelTest.kt
+  s_5373a0f018b70a::t_f2a661a6c2c1f4 16-78
+  s_5373a0f018b70a::t_b69d6216b87b4f 1-15
+feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/SignUpViewModel.kt
+  s_5373a0f018b70a::t_b69d6216b87b4f 1-15
+  s_5373a0f018b70a::t_925b35dcc65016 16-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7f9bc344b57e70b0982a0080ce67fb8d43d401ae",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
