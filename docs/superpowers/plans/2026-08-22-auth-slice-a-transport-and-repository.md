@@ -498,7 +498,9 @@ git commit -m "feat(data): add AuthRepository and map supabase failures to AuthE
 
 **Files:**
 - Create: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SupabaseAuthRepository.kt`
+- Create: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SessionStateMapping.kt`
 - Modify: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt`
+- Test: `core/data/src/test/kotlin/com/practice/thenewmovies/core/data/repository/SessionStateMappingTest.kt`
 
 - [ ] **Step 1: Write the implementation**
 
@@ -529,18 +531,12 @@ internal class SupabaseAuthRepository @Inject constructor(
     @Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
 
-    override val sessionState: Flow<SessionState> = client.auth.sessionStatus.map { status ->
-        when (status) {
-            is SessionStatus.Authenticated ->
-                // A session with no user record is unusable for anything the app needs, so it
-                // is folded into the same SignedOut bucket as SessionStatus.NotAuthenticated.
-                status.session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
-
-            is SessionStatus.Initializing -> SessionState.Loading
-            is SessionStatus.NotAuthenticated -> SessionState.SignedOut
-            is SessionStatus.RefreshFailure -> SessionState.SignedOut
+    // runningFold, not map: the RefreshFailure branch needs the previous state to decide, and
+    // runningFold emits the initial value first so a fresh collector sees Loading immediately.
+    override val sessionState: Flow<SessionState> =
+        client.auth.sessionStatus.runningFold(SessionState.Loading as SessionState) { previous, status ->
+            status.toSessionState(previous)
         }
-    }
 
     override suspend fun signUp(email: String, password: String): AuthResult = attempt {
         client.auth.signUpWith(Email) {
@@ -592,6 +588,44 @@ internal class SupabaseAuthRepository @Inject constructor(
     }
 }
 ```
+
+The session mapping itself lives in `SessionStateMapping.kt` as a pure function, because it is
+the only real logic in this class and the class cannot be unit-tested without a live client:
+
+```kotlin
+internal fun SessionStatus.toSessionState(previous: SessionState): SessionState = when (this) {
+    is SessionStatus.Initializing -> SessionState.Loading
+
+    // A session with no user record is unusable for anything the app needs, so it folds into
+    // the same SignedOut bucket as NotAuthenticated.
+    is SessionStatus.Authenticated ->
+        session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
+
+    is SessionStatus.NotAuthenticated -> SessionState.SignedOut
+
+    is SessionStatus.RefreshFailure -> when (cause) {
+        // The refresh never reached the server, so the credentials are not known to be bad.
+        // Every screen renders from Room, and :app destroys the back stack on SignedOut — so
+        // ejecting the user to a login form over a lost second of signal would be wrong.
+        is RefreshFailureCause.NetworkError ->
+            previous.takeIf { it is SessionState.SignedIn } ?: SessionState.SignedOut
+
+        // Here the server answered and rejected the refresh: the token is likely revoked, from
+        // a password changed on another device or a deleted account.
+        is RefreshFailureCause.InternalServerError -> SessionState.SignedOut
+    }
+}
+```
+
+`SessionStatus`, `UserSession`, and `UserInfo` are plain data classes, so `SessionStateMappingTest`
+covers all seven branches directly — including that a `NetworkError` keeps a signed-in user signed
+in, and that an `InternalServerError` does not. `RefreshFailureCause.InternalServerError` needs a
+`RestException`, which needs a Ktor `HttpResponse`: `mockk<HttpResponse>(relaxed = true)` satisfies
+it, the same way `AuthErrorMappingTest` builds its `AuthRestException`.
+
+Note `SessionStatus.RefreshFailure` carries **only** a `cause` — it has no cached session, and
+`Auth.currentSessionOrNull()` returns null in that state too, which is why the previous state has
+to be folded through rather than read back from the client.
 
 Two notes for the engineer:
 
