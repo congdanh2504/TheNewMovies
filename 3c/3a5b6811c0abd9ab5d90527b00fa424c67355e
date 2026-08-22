@@ -1,0 +1,21 @@
+feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginViewModel.kt
+  s_5373a0f018b70a::t_f43ba918f82196 64-66
+feature/auth/impl/src/test/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginViewModelTest.kt
+  s_5373a0f018b70a::t_929fbe7c9f5223 23,45,47,94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "3c3a5b6811c0abd9ab5d90527b00fa424c67355e",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
