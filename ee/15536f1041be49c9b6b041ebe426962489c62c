@@ -1,0 +1,20 @@
+core/supabase/src/main/kotlin/com/practice/thenewmovies/core/supabase/di/SupabaseModule.kt
+  s_5373a0f018b70a::t_4e3bebd1da32ce 1-15
+  s_5373a0f018b70a::t_76ebd6489135d8 16-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "ee15536f1041be49c9b6b041ebe426962489c62c",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
