@@ -13,6 +13,23 @@ slices without leaving the repo broken.
 
 Spec: [`../specs/2026-08-21-thenewmovies-design.md`](../specs/2026-08-21-thenewmovies-design.md)
 
+## Supabase authentication (2026-08-22)
+
+A second body of work, on top of the finished app. Execute in order; each slice ends with an
+installable app.
+
+| Plan | Delivers |
+| --- | --- |
+| [2026-08-22-auth-slice-a-transport-and-repository.md](2026-08-22-auth-slice-a-transport-and-repository.md) | `core:supabase`, auth models, `AuthRepository` + Supabase implementation, `TestAuthRepository` |
+| [2026-08-22-auth-slice-b-ui-and-gating.md](2026-08-22-auth-slice-b-ui-and-gating.md) | `MoviesTextField`, `feature:auth:api`/`impl`, four screens, session gating in `:app`, sign out |
+| [2026-08-22-auth-slice-c-watchlist-sync.md](2026-08-22-auth-slice-c-watchlist-sync.md) | `watchlist` Postgres table with RLS, user-scoped Room cache, write-through sync with a dirty flag |
+
+Spec: [`../specs/2026-08-22-supabase-auth-design.md`](../specs/2026-08-22-supabase-auth-design.md)
+
+Needs `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `local.properties`, plus three dashboard changes
+that no plan can make for you: confirm-email off, the recovery template switched to `{{ .Token }}`,
+and the SQL from `docs/supabase/watchlist.sql` run.
+
 Reference implementation to port from: `/Users/danhtruong/android/TheMovies`
 
 ## Where the plans diverge from the spec
