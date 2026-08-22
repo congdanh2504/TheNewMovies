@@ -1153,6 +1153,26 @@ git add -A && git commit -m "style: apply spotless" || echo "nothing to commit"
 - Every box in Task 7 Step 3 is checked
 - A fresh install signed in as an existing user shows that user's watchlist
 
+## Findings from executing tasks 2 to 4
+
+- **Tasks 2, 3 and 4 were executed as one commit**, not three. They are mutually dependent:
+  `WatchlistRow`'s mapping needs the new entity columns, and `DefaultWatchlistRepository` will not
+  compile without both. Splitting them would have meant committing a tree that does not build.
+- **Both unverified API shapes in this plan turned out correct**, checked against the resolved
+  sources rather than assumed: postgrest-kt 3.1.4 exposes `select { filter { eq(...) } }` and
+  `delete { filter { ... } }` as written, and Room 2.7.1 has
+  `fallbackToDestructiveMigration(dropAllTables: Boolean)` directly — no deprecated fallback needed.
+- **`core:data` needed `testImplementation(projects.core.testing)`.** That looks like a dependency
+  cycle (`core:testing` depends on `core:data`) but is not one — a test configuration depending on
+  another module's main output is fine, and both the targeted test task and the full build confirm it.
+- **`@OptIn(ExperimentalCoroutinesApi::class)` is still required** for `flatMapLatest` at the pinned
+  coroutines 1.10.2.
+- **Room stores `Boolean` as INTEGER 0/1**, so the DAO's raw `pendingSync = 1` predicates match what
+  Room generates — proven on-device rather than reasoned about.
+- **`deleteSynced` then `upsertAll` is not wrapped in a `@Transaction`**, so a live collector on
+  `getAll()` can observe an empty list for an instant mid-sync. Sync only runs at sign-in, so this is
+  a cosmetic flicker rather than data loss; it is left alone deliberately.
+
 ## Known limits, stated rather than hidden
 
 - **Sync runs only at sign-in.** A change made on another device appears after a sign-out and
