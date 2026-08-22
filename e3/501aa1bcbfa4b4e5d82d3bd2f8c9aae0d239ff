@@ -1,0 +1,32 @@
+feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/ResetPasswordViewModel.kt
+  s_5373a0f018b70a::t_47bf98d035f57c 90
+app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt
+  s_5373a0f018b70a::t_98312b54c087c6 27,36,46-47,54,67-90
+feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/navigation/AuthEntries.kt
+  s_5373a0f018b70a::t_71f6dbd72ab8be 16-51
+  s_5373a0f018b70a::t_473359cd00d840 1-15
+app/src/main/kotlin/com/practice/thenewmovies/ui/AppViewModel.kt
+  s_5373a0f018b70a::t_473359cd00d840 1-15
+  s_5373a0f018b70a::t_25464071903202 16-39
+app/build.gradle.kts
+  s_5373a0f018b70a::t_beffcd700248d2 31,34-35
+app/src/main/kotlin/com/practice/thenewmovies/ui/AuthHost.kt
+  s_5373a0f018b70a::t_473359cd00d840 1-15
+  s_5373a0f018b70a::t_518ecab2407ef6 16-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "e3501aa1bcbfa4b4e5d82d3bd2f8c9aae0d239ff",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
