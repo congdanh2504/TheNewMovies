@@ -1,0 +1,20 @@
+docs/superpowers/plans/2026-08-22-auth-slice-b-ui-and-gating.md
+  s_5373a0f018b70a::t_ec9974f810cf10 496,518,970,1299
+  s_5373a0f018b70a::t_c5e6b9ca05cc6a 520,567,611,644-649,1023,1051,1096,1413,1441,1483,1523-1525
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "2b6becc2ada6a1637a3a494e1c7478b1a175f124",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
