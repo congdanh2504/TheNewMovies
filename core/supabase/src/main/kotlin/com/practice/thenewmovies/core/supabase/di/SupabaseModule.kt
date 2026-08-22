@@ -28,7 +28,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SupabaseModule {
+internal object SupabaseModule {
 
     @Provides
     @Singleton
