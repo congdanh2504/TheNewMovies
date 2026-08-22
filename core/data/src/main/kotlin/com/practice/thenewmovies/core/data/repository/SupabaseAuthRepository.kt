@@ -18,17 +18,14 @@ package com.practice.thenewmovies.core.data.repository
 import com.practice.thenewmovies.core.common.network.Dispatcher
 import com.practice.thenewmovies.core.common.network.MoviesDispatchers
 import com.practice.thenewmovies.core.model.AuthResult
-import com.practice.thenewmovies.core.model.AuthUser
 import com.practice.thenewmovies.core.model.SessionState
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
-import io.github.jan.supabase.auth.status.SessionStatus
-import io.github.jan.supabase.auth.user.UserSession
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,20 +36,14 @@ internal class SupabaseAuthRepository @Inject constructor(
     @Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
 
-    override val sessionState: Flow<SessionState> = client.auth.sessionStatus.map { status ->
-        when (status) {
-            is SessionStatus.Authenticated ->
-                // A session with no user record is unusable for anything the app needs, so it
-                // is folded into the same SignedOut bucket as SessionStatus.NotAuthenticated.
-                status.session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
-
-            is SessionStatus.Initializing -> SessionState.Loading
-
-            is SessionStatus.NotAuthenticated -> SessionState.SignedOut
-
-            is SessionStatus.RefreshFailure -> SessionState.SignedOut
+    // runningFold emits its initial value first, so a fresh collector sees Loading immediately
+    // rather than waiting for the first SessionStatus emission. The accumulator is the previous
+    // SessionState, which toSessionState needs to decide what a RefreshFailure should fall back
+    // to -- no separate cache required.
+    override val sessionState: Flow<SessionState> =
+        client.auth.sessionStatus.runningFold(SessionState.Loading as SessionState) { previous, status ->
+            status.toSessionState(previous)
         }
-    }
 
     override suspend fun signUp(email: String, password: String): AuthResult = attempt {
         client.auth.signUpWith(Email) {
@@ -97,8 +88,4 @@ internal class SupabaseAuthRepository @Inject constructor(
                 AuthResult.Failure(exception.toAuthError())
             }
         }
-
-    private fun UserSession.toAuthUser(): AuthUser? = user?.let { user ->
-        AuthUser(id = user.id, email = user.email.orEmpty())
-    }
 }
