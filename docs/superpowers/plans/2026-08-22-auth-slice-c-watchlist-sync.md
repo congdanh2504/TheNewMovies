@@ -1175,6 +1175,17 @@ git add -A && git commit -m "style: apply spotless" || echo "nothing to commit"
 
 ## Known limits, stated rather than hidden
 
+- **A synced watchlist movie cannot be opened offline until its detail has been fetched once.**
+  Sync restores the `watchlist` row, which carries enough for the list item (title, runtime, genre,
+  rating), but not a `MovieDetailEntity`. Nothing triggers `refreshDetail(id)` for a synced row, so
+  on a fresh install the Detail screen for a movie the user has explicitly saved shows "Could not
+  load this movie" until they open it online once. Bookmarking lives only on the Detail screen, so
+  an offline bookmark is also unreachable in that state. This is pre-existing Detail behaviour
+  rather than something sync introduced, and it is left alone deliberately — fixing it means either
+  fetching details for every synced row at sign-in, or teaching Detail to render from a watchlist
+  row alone. Worth revisiting if offline use of the watchlist matters.
+
+
 - **Sync runs only at sign-in.** A change made on another device appears after a sign-out and
   sign-in, not while the app is open. Realtime subscriptions or a pull-to-refresh would fix it;
   neither is in this design.
