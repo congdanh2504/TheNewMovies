@@ -493,6 +493,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -514,8 +515,9 @@ class LoginViewModelTest {
         assertEquals("", state.email)
         assertEquals("", state.password)
         assertNull(state.emailError)
+        assertNull(state.passwordError)
         assertNull(state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
@@ -562,7 +564,7 @@ class LoginViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(AuthError.InvalidCredentials, state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
@@ -606,7 +608,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class LoginUiState(
+internal data class LoginUiState(
     val email: String = "",
     val password: String = "",
     val emailError: FieldError? = null,
@@ -639,7 +641,12 @@ internal class LoginViewModel @Inject constructor(
         val emailError = validateEmail(email)
         val passwordError = validatePassword(state.password)
         if (emailError != null || passwordError != null) {
-            _uiState.update { it.copy(emailError = emailError, passwordError = passwordError) }
+            // formError is cleared here too: after onSubmit returns it must reflect only this
+            // attempt. Relying on the onChange handlers to clear it puts the invariant in the
+            // wrong place, and breaks as soon as a screen re-validates without a field edit.
+            _uiState.update {
+                it.copy(emailError = emailError, passwordError = passwordError, formError = null)
+            }
             return
         }
 
@@ -960,6 +967,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -1012,7 +1020,7 @@ class SignUpViewModelTest {
         viewModel.onSubmit()
 
         assertEquals(AuthError.EmailAlreadyRegistered, viewModel.uiState.value.formError)
-        assertTrue(!viewModel.uiState.value.isSubmitting)
+        assertFalse(viewModel.uiState.value.isSubmitting)
     }
 }
 ```
@@ -1040,7 +1048,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class SignUpUiState(
+internal data class SignUpUiState(
     val email: String = "",
     val password: String = "",
     val confirmation: String = "",
@@ -1085,6 +1093,7 @@ internal class SignUpViewModel @Inject constructor(
                     emailError = emailError,
                     passwordError = passwordError,
                     confirmationError = confirmationError,
+                    formError = null,
                 )
             }
             return
@@ -1287,6 +1296,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -1400,7 +1410,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class ForgotPasswordUiState(
+internal data class ForgotPasswordUiState(
     val email: String = "",
     val emailError: FieldError? = null,
     val formError: AuthError? = null,
@@ -1428,7 +1438,7 @@ internal class ForgotPasswordViewModel @Inject constructor(
         val email = state.email.trim()
         val emailError = validateEmail(email)
         if (emailError != null) {
-            _uiState.update { it.copy(emailError = emailError) }
+            _uiState.update { it.copy(emailError = emailError, formError = null) }
             return
         }
 
@@ -1470,7 +1480,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class ResetPasswordUiState(
+internal data class ResetPasswordUiState(
     val code: String = "",
     val password: String = "",
     val codeError: FieldError? = null,
@@ -1510,7 +1520,9 @@ internal class ResetPasswordViewModel @Inject constructor(
         val codeError = validateCode(state.code)
         val passwordError = validatePassword(state.password)
         if (codeError != null || passwordError != null) {
-            _uiState.update { it.copy(codeError = codeError, passwordError = passwordError) }
+            _uiState.update {
+                it.copy(codeError = codeError, passwordError = passwordError, formError = null)
+            }
             return
         }
 
