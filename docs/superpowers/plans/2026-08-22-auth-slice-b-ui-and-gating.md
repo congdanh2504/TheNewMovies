@@ -208,13 +208,18 @@ drawable.
 The filename must keep the `core_designsystem_` prefix — the library convention plugin sets
 `resourcePrefix` from the module path and the build fails without it.
 
+Note `?android:attr/colorControlNormal`, not `?attr/`. The unqualified form links fine in
+`assembleDebug` but AAPT rejects it when linking a standalone instrumentation APK, which breaks
+`connectedDebugAndroidTest` for *every* module depending on `core:designsystem` — including ones
+this slice never touches.
+
 ```xml
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24"
-    android:tint="?attr/colorControlNormal">
+    android:tint="?android:attr/colorControlNormal">
     <path
         android:fillColor="@android:color/white"
         android:pathData="M17,7l-1.41,1.41L18.17,11H8v2h10.17l-2.58,2.58L17,17l5,-5zM4,5h8V3H4c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h8v-2H4V5z" />
@@ -687,6 +692,12 @@ git commit -m "feat(auth): add LoginViewModel"
 **Files:**
 - Create: `feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginScreen.kt`
 - Test: `feature/auth/impl/src/androidTest/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginScreenTest.kt`
+- Modify: `feature/auth/impl/build.gradle.kts`
+
+The convention plugin supplies `androidx.test:runner` but **not** the Compose UI test bundle, the
+Compose BOM, or `androidx.test.ext:junit` for `androidTest`. Copy the three `androidTestImplementation`
+lines from `feature/search/impl/build.gradle.kts` — without them this module will not compile its
+instrumented test at all.
 
 - [ ] **Step 1: Write the screen**
 
@@ -700,6 +711,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -805,7 +817,9 @@ internal fun LoginScreen(
             enabled = !uiState.isSubmitting,
         ) {
             if (uiState.isSubmitting) {
-                CircularProgressIndicator(modifier = Modifier.height(20.dp))
+                // size, not height: Material 3 chains its own .size(40.dp) after the passed
+                // modifier, so constraining height alone yields a squashed ellipse.
+                CircularProgressIndicator(modifier = Modifier.size(20.dp))
             } else {
                 Text(text = "Sign in")
             }
@@ -861,6 +875,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 import com.practice.thenewmovies.core.model.AuthError
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -906,13 +921,17 @@ class LoginScreenTest {
     @Test
     fun tappingSubmitInvokesTheCallback() {
         var submitted = false
-        setScreen(LoginUiState(email = "user@example.com", password = "hunter2")) {
-            submitted = true
-        }
+        // Named argument, not a trailing lambda: a trailing lambda binds to setScreen's LAST
+        // parameter (onSignUpClick), so the test would wire the flag to the wrong callback and
+        // pass while proving nothing.
+        setScreen(
+            uiState = LoginUiState(email = "user@example.com", password = "hunter2"),
+            onSubmit = { submitted = true },
+        )
 
         composeTestRule.onNodeWithTag("login_submit").performClick()
 
-        assert(submitted)
+        assertTrue("onSubmit was not invoked", submitted)
     }
 
     @Test
@@ -922,7 +941,7 @@ class LoginScreenTest {
 
         composeTestRule.onNodeWithTag("login_to_signup").performClick()
 
-        assert(tapped)
+        assertTrue("onSignUpClick was not invoked", tapped)
     }
 }
 ```
@@ -1132,6 +1151,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -1241,7 +1261,9 @@ internal fun SignUpScreen(
                 enabled = !uiState.isSubmitting,
             ) {
                 if (uiState.isSubmitting) {
-                    CircularProgressIndicator(modifier = Modifier.height(20.dp))
+                    // size, not height: Material 3 chains its own .size(40.dp) after the passed
+                // modifier, so constraining height alone yields a squashed ellipse.
+                CircularProgressIndicator(modifier = Modifier.size(20.dp))
                 } else {
                     Text(text = "Create account")
                 }
