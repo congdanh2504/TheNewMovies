@@ -20,4 +20,5 @@ import com.practice.thenewmovies.core.designsystem.R
 object MoviesIcons {
     val Back = R.drawable.core_designsystem_ic_back_icon
     val Search = R.drawable.core_designsystem_ic_search_left
+    val Logout = R.drawable.core_designsystem_ic_logout
 }
