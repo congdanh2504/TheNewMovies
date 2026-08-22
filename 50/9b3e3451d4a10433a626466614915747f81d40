@@ -1,0 +1,23 @@
+app/src/main/kotlin/com/practice/thenewmovies/ui/AppViewModel.kt
+  s_5373a0f018b70a::t_6ac0541681d109 27
+  s_5373a0f018b70a::t_149acc97601aa0 48-52,54,56
+app/src/test/kotlin/com/practice/thenewmovies/ui/AppViewModelTest.kt
+  s_5373a0f018b70a::t_94492b58ccdf15 70-73,87-100
+  s_5373a0f018b70a::t_36251e348567d9 101-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "509b3e3451d4a10433a626466614915747f81d40",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
