@@ -1,0 +1,21 @@
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SupabaseAuthRepository.kt
+  s_5373a0f018b70a::t_f716b98a7851d6 45-46,96-97
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/AuthRepository.kt
+  s_5373a0f018b70a::t_263ffef4e51efd 34-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "059cc45e64cc80282a8971620bec750e2f54ea52",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
