@@ -28,8 +28,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.navigation)
+    implementation(projects.feature.auth.api)
+    implementation(projects.feature.auth.impl)
     implementation(projects.feature.detail.api)
     implementation(projects.feature.detail.impl)
     implementation(projects.feature.home.api)
@@ -48,4 +51,13 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
+
+    testImplementation(projects.core.testing)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // :app declares a testInstrumentationRunner, so AGP builds and launches an instrumentation
+    // APK even though this module has no androidTest sources. Without the runner artifact that
+    // APK dies with ClassNotFoundException, failing the whole-project connectedDebugAndroidTest.
+    androidTestImplementation(libs.androidx.test.runner)
 }

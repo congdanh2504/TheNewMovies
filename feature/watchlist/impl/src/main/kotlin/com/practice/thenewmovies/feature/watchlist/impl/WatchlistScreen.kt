@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.thenewmovies.core.designsystem.component.MoviesTopAppBar
+import com.practice.thenewmovies.core.designsystem.icon.MoviesIcons
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 import com.practice.thenewmovies.core.model.WatchlistMovie
 import com.practice.thenewmovies.core.ui.component.MetaLabel
@@ -54,6 +55,7 @@ import com.practice.thenewmovies.core.ui.component.RatingChip
 internal fun WatchlistScreen(
     onBackClick: () -> Unit,
     onMovieClick: (Int) -> Unit,
+    onSignOutClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: WatchlistViewModel = hiltViewModel(),
 ) {
@@ -63,6 +65,7 @@ internal fun WatchlistScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         onMovieClick = onMovieClick,
+        onSignOutClick = onSignOutClick,
         modifier = modifier,
     )
 }
@@ -72,6 +75,7 @@ internal fun WatchlistScreen(
     uiState: WatchlistUiState,
     onBackClick: () -> Unit,
     onMovieClick: (Int) -> Unit,
+    onSignOutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,6 +87,8 @@ internal fun WatchlistScreen(
             title = "Watch list",
             onBackClick = onBackClick,
             modifier = Modifier.padding(top = 16.dp),
+            actionIcon = MoviesIcons.Logout,
+            onActionClick = onSignOutClick,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -185,6 +191,7 @@ private fun WatchlistScreenPreview() {
             ),
             onBackClick = {},
             onMovieClick = {},
+            onSignOutClick = {},
         )
     }
 }
@@ -197,6 +204,7 @@ private fun WatchlistScreenEmptyPreview() {
             uiState = WatchlistUiState.Empty,
             onBackClick = {},
             onMovieClick = {},
+            onSignOutClick = {},
         )
     }
 }

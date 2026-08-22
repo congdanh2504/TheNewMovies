@@ -208,13 +208,18 @@ drawable.
 The filename must keep the `core_designsystem_` prefix — the library convention plugin sets
 `resourcePrefix` from the module path and the build fails without it.
 
+Note `?android:attr/colorControlNormal`, not `?attr/`. The unqualified form links fine in
+`assembleDebug` but AAPT rejects it when linking a standalone instrumentation APK, which breaks
+`connectedDebugAndroidTest` for *every* module depending on `core:designsystem` — including ones
+this slice never touches.
+
 ```xml
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24"
-    android:tint="?attr/colorControlNormal">
+    android:tint="?android:attr/colorControlNormal">
     <path
         android:fillColor="@android:color/white"
         android:pathData="M17,7l-1.41,1.41L18.17,11H8v2h10.17l-2.58,2.58L17,17l5,-5zM4,5h8V3H4c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h8v-2H4V5z" />
@@ -493,6 +498,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -514,8 +520,9 @@ class LoginViewModelTest {
         assertEquals("", state.email)
         assertEquals("", state.password)
         assertNull(state.emailError)
+        assertNull(state.passwordError)
         assertNull(state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
@@ -562,7 +569,7 @@ class LoginViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(AuthError.InvalidCredentials, state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
@@ -606,7 +613,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class LoginUiState(
+internal data class LoginUiState(
     val email: String = "",
     val password: String = "",
     val emailError: FieldError? = null,
@@ -639,7 +646,12 @@ internal class LoginViewModel @Inject constructor(
         val emailError = validateEmail(email)
         val passwordError = validatePassword(state.password)
         if (emailError != null || passwordError != null) {
-            _uiState.update { it.copy(emailError = emailError, passwordError = passwordError) }
+            // formError is cleared here too: after onSubmit returns it must reflect only this
+            // attempt. Relying on the onChange handlers to clear it puts the invariant in the
+            // wrong place, and breaks as soon as a screen re-validates without a field edit.
+            _uiState.update {
+                it.copy(emailError = emailError, passwordError = passwordError, formError = null)
+            }
             return
         }
 
@@ -680,6 +692,12 @@ git commit -m "feat(auth): add LoginViewModel"
 **Files:**
 - Create: `feature/auth/impl/src/main/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginScreen.kt`
 - Test: `feature/auth/impl/src/androidTest/kotlin/com/practice/thenewmovies/feature/auth/impl/LoginScreenTest.kt`
+- Modify: `feature/auth/impl/build.gradle.kts`
+
+The convention plugin supplies `androidx.test:runner` but **not** the Compose UI test bundle, the
+Compose BOM, or `androidx.test.ext:junit` for `androidTest`. Copy the three `androidTestImplementation`
+lines from `feature/search/impl/build.gradle.kts` — without them this module will not compile its
+instrumented test at all.
 
 - [ ] **Step 1: Write the screen**
 
@@ -693,6 +711,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -798,7 +817,9 @@ internal fun LoginScreen(
             enabled = !uiState.isSubmitting,
         ) {
             if (uiState.isSubmitting) {
-                CircularProgressIndicator(modifier = Modifier.height(20.dp))
+                // size, not height: Material 3 chains its own .size(40.dp) after the passed
+                // modifier, so constraining height alone yields a squashed ellipse.
+                CircularProgressIndicator(modifier = Modifier.size(20.dp))
             } else {
                 Text(text = "Sign in")
             }
@@ -854,6 +875,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 import com.practice.thenewmovies.core.model.AuthError
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -899,13 +921,17 @@ class LoginScreenTest {
     @Test
     fun tappingSubmitInvokesTheCallback() {
         var submitted = false
-        setScreen(LoginUiState(email = "user@example.com", password = "hunter2")) {
-            submitted = true
-        }
+        // Named argument, not a trailing lambda: a trailing lambda binds to setScreen's LAST
+        // parameter (onSignUpClick), so the test would wire the flag to the wrong callback and
+        // pass while proving nothing.
+        setScreen(
+            uiState = LoginUiState(email = "user@example.com", password = "hunter2"),
+            onSubmit = { submitted = true },
+        )
 
         composeTestRule.onNodeWithTag("login_submit").performClick()
 
-        assert(submitted)
+        assertTrue("onSubmit was not invoked", submitted)
     }
 
     @Test
@@ -915,7 +941,7 @@ class LoginScreenTest {
 
         composeTestRule.onNodeWithTag("login_to_signup").performClick()
 
-        assert(tapped)
+        assertTrue("onSignUpClick was not invoked", tapped)
     }
 }
 ```
@@ -960,6 +986,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -1012,7 +1039,7 @@ class SignUpViewModelTest {
         viewModel.onSubmit()
 
         assertEquals(AuthError.EmailAlreadyRegistered, viewModel.uiState.value.formError)
-        assertTrue(!viewModel.uiState.value.isSubmitting)
+        assertFalse(viewModel.uiState.value.isSubmitting)
     }
 }
 ```
@@ -1040,7 +1067,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class SignUpUiState(
+internal data class SignUpUiState(
     val email: String = "",
     val password: String = "",
     val confirmation: String = "",
@@ -1085,6 +1112,7 @@ internal class SignUpViewModel @Inject constructor(
                     emailError = emailError,
                     passwordError = passwordError,
                     confirmationError = confirmationError,
+                    formError = null,
                 )
             }
             return
@@ -1123,6 +1151,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -1232,7 +1261,9 @@ internal fun SignUpScreen(
                 enabled = !uiState.isSubmitting,
             ) {
                 if (uiState.isSubmitting) {
-                    CircularProgressIndicator(modifier = Modifier.height(20.dp))
+                    // size, not height: Material 3 chains its own .size(40.dp) after the passed
+                // modifier, so constraining height alone yields a squashed ellipse.
+                CircularProgressIndicator(modifier = Modifier.size(20.dp))
                 } else {
                     Text(text = "Create account")
                 }
@@ -1287,6 +1318,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -1400,7 +1432,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class ForgotPasswordUiState(
+internal data class ForgotPasswordUiState(
     val email: String = "",
     val emailError: FieldError? = null,
     val formError: AuthError? = null,
@@ -1428,7 +1460,7 @@ internal class ForgotPasswordViewModel @Inject constructor(
         val email = state.email.trim()
         val emailError = validateEmail(email)
         if (emailError != null) {
-            _uiState.update { it.copy(emailError = emailError) }
+            _uiState.update { it.copy(emailError = emailError, formError = null) }
             return
         }
 
@@ -1470,7 +1502,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class ResetPasswordUiState(
+internal data class ResetPasswordUiState(
     val code: String = "",
     val password: String = "",
     val codeError: FieldError? = null,
@@ -1510,7 +1542,9 @@ internal class ResetPasswordViewModel @Inject constructor(
         val codeError = validateCode(state.code)
         val passwordError = validatePassword(state.password)
         if (codeError != null || passwordError != null) {
-            _uiState.update { it.copy(codeError = codeError, passwordError = passwordError) }
+            _uiState.update {
+                it.copy(codeError = codeError, passwordError = passwordError, formError = null)
+            }
             return
         }
 
@@ -2019,66 +2053,61 @@ git commit -m "feat(app): gate the app on the Supabase session"
 
 ### Task 10: Sign out
 
+Sign-out lives in `AppViewModel`, **not** in `WatchlistViewModel`. It is an app-level action whose
+completion determines whether the signed-in UI should exist at all, so hosting it in a ViewModel
+scoped to one tab's nav entry is inverted: tapping the Watch List back arrow switches tabs, which
+clears that entry's `ViewModelStore` and cancels the scope mid-call, leaving the user silently
+signed in. `AppViewModel` is created at the root of `MoviesApp` and survives every nav change
+inside the signed-in app.
+
 **Files:**
-- Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModel.kt`
+- Modify: `app/src/main/kotlin/com/practice/thenewmovies/ui/AppViewModel.kt` — add `signOut()`
+- Modify: `app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt` — thread `onSignOut` into `SignedInApp`
+- Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/navigation/WatchlistEntry.kt` — gains an `onSignOut` parameter
 - Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistScreen.kt`
-- Test: `feature/watchlist/impl/src/test/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModelTest.kt`
+- Test: `app/src/test/kotlin/com/practice/thenewmovies/ui/AppViewModelTest.kt`
 
 - [ ] **Step 1: Write the failing test**
 
-Add to the existing `WatchlistViewModelTest`:
+Create `app/src/test/kotlin/com/practice/thenewmovies/ui/AppViewModelTest.kt`:
 
 ```kotlin
     @Test
     fun `signing out delegates to the auth repository`() = runTest {
         val authRepository = TestAuthRepository()
-        val viewModel = WatchlistViewModel(
-            watchlistRepository = TestWatchlistRepository(),
-            authRepository = authRepository,
-        )
 
-        viewModel.onSignOutClick()
+        AppViewModel(authRepository).signOut()
 
         assertEquals(1, authRepository.signOutCount)
     }
 ```
 
-Add the imports it needs: `com.practice.thenewmovies.core.testing.repository.TestAuthRepository`
-and, if the existing tests construct the ViewModel positionally, update those call sites to pass
-the new argument.
+plus one asserting `sessionState` starts at `SessionState.Loading`. `:app` may need
+`testImplementation(projects.core.testing)` added to its build file.
 
 - [ ] **Step 2: Run it to verify it fails**
 
 Run: `./gradlew :feature:watchlist:impl:testDebugUnitTest`
 Expected: FAIL — the constructor takes one argument, and `onSignOutClick` does not exist.
 
-- [ ] **Step 3: Extend the ViewModel**
+- [ ] **Step 3: Add `signOut()` to `AppViewModel`**
+
+`WatchlistViewModel` is NOT touched — it keeps its single `watchlistRepository` parameter.
 
 ```kotlin
-@HiltViewModel
-internal class WatchlistViewModel @Inject constructor(
-    watchlistRepository: WatchlistRepository,
-    private val authRepository: AuthRepository,
-) : ViewModel() {
-
-    val uiState: StateFlow<WatchlistUiState> = watchlistRepository.getWatchlist()
-        .map { movies ->
-            if (movies.isEmpty()) WatchlistUiState.Empty else WatchlistUiState.Success(movies)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = WatchlistUiState.Loading,
-        )
-
-    fun onSignOutClick() {
+    fun signOut() {
         viewModelScope.launch { authRepository.signOut() }
     }
-}
 ```
 
-New imports: `com.practice.thenewmovies.core.data.repository.AuthRepository` and
-`kotlinx.coroutines.launch`.
+`authRepository` becomes a `private val`. Then thread the callback down: `MoviesApp`'s `SignedIn`
+branch calls `SignedInApp(onSignOut = viewModel::signOut)`, `SignedInApp` passes it to
+`watchlistEntry(navigator, onSignOut)`, and the entry passes it to the screen as `onSignOutClick`.
+Do not create a second `hiltViewModel()` inside `SignedInApp`.
+
+The scope is still the Activity's, so killing the app mid-sign-out leaves the session intact. That
+is fine: nothing was sent and nothing is inconsistent, and the next launch simply lands the user
+signed in.
 
 - [ ] **Step 4: Run the test to verify it passes**
 

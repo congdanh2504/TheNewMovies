@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.designsystem.icon
+package com.practice.thenewmovies.feature.auth.api
 
-import com.practice.thenewmovies.core.designsystem.R
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
-object MoviesIcons {
-    val Back = R.drawable.core_designsystem_ic_back_icon
-    val Search = R.drawable.core_designsystem_ic_search_left
-    val Logout = R.drawable.core_designsystem_ic_logout
-}
+@Serializable
+data object LoginNavKey : NavKey
+
+@Serializable
+data object SignUpNavKey : NavKey
+
+@Serializable
+data object ForgotPasswordNavKey : NavKey
+
+@Serializable
+data class ResetPasswordNavKey(val email: String) : NavKey
