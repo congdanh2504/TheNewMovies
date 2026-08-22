@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.database)
     implementation(projects.core.network)
+    implementation(projects.core.supabase)
 
     api(libs.paging.runtime)
     implementation(libs.kotlinx.coroutines.core)

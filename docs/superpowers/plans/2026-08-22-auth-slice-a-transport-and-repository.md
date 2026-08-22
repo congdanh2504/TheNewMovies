@@ -301,8 +301,9 @@ enum class AuthError {
 
 - [ ] **Step 3: Compile**
 
-Run: `./gradlew :core:model:compileDebugKotlin`
-Expected: BUILD SUCCESSFUL.
+Run: `./gradlew :core:model:compileKotlin`
+Expected: BUILD SUCCESSFUL. Note `core:model` is a JVM library (`themovies.jvm.library`), so it
+has no `compileDebugKotlin` task — that name only exists on the Android modules.
 
 - [ ] **Step 4: Format and commit**
 
@@ -357,9 +358,20 @@ interface AuthRepository {
     /** Sends a recovery mail containing a 6-digit code. */
     suspend fun sendPasswordReset(email: String): AuthResult
 
-    /** Verifies the recovery code, then sets [newPassword] on the account. */
+    /**
+     * Verifies the recovery code, then sets [newPassword] on the account.
+     *
+     * Verifying the code authenticates the session before the password is changed, so a failure
+     * from the second step leaves the user signed in with their old password still valid —
+     * callers must not assume [AuthResult.Failure] means nothing happened.
+     */
     suspend fun resetPassword(email: String, code: String, newPassword: String): AuthResult
 
+    /**
+     * Clears the session. Deliberately returns no result: a revoked or expired token makes the
+     * server call fail while the local session is cleared anyway, and surfacing that would trap
+     * the user in a signed-in shell they cannot leave.
+     */
     suspend fun signOut()
 }
 ```
@@ -422,6 +434,7 @@ Expected: FAIL — `Unresolved reference: toAuthError`.
 package com.practice.thenewmovies.core.data.repository
 
 import com.practice.thenewmovies.core.model.AuthError
+import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
@@ -429,19 +442,22 @@ import java.io.IOException
 /**
  * Maps a failure from supabase-kt onto the app's error vocabulary.
  *
- * Matching is done on the error code's `name` rather than on enum constants, so a renamed or
- * added code in a future supabase-kt release cannot break compilation — it just falls through to
- * [AuthError.Unknown]. The exact codes are verified by hand against the live project; see the
- * verification checklist in Slice B.
+ * An unmapped or newly added supabase code falls through to [AuthError.Unknown]. A code this app
+ * does map, that a future supabase-kt release renames or removes, will fail compilation on
+ * purpose, so the mapping gets revisited instead of silently degrading to a generic message.
+ * These paths are also walked by hand against the live project; see the checklist in Slice B.
  */
 internal fun Throwable.toAuthError(): AuthError {
     if (this is CancellationException) throw this
     return when (this) {
-        is AuthRestException -> when (errorCode?.name) {
-            "InvalidCredentials" -> AuthError.InvalidCredentials
-            "UserAlreadyExists", "EmailExists" -> AuthError.EmailAlreadyRegistered
-            "WeakPassword" -> AuthError.WeakPassword
-            "OtpExpired", "OtpDisabled" -> AuthError.InvalidCode
+        is AuthRestException -> when (errorCode) {
+            AuthErrorCode.InvalidCredentials -> AuthError.InvalidCredentials
+            AuthErrorCode.UserAlreadyExists,
+            AuthErrorCode.EmailExists,
+            -> AuthError.EmailAlreadyRegistered
+
+            AuthErrorCode.WeakPassword -> AuthError.WeakPassword
+            AuthErrorCode.OtpExpired, AuthErrorCode.OtpDisabled -> AuthError.InvalidCode
             else -> AuthError.Unknown
         }
 
@@ -451,11 +467,17 @@ internal fun Throwable.toAuthError(): AuthError {
 }
 ```
 
-If `AuthRestException` or its `errorCode` property does not resolve, open the class from the
-resolved artifact (in Android Studio: Navigate → Class → `AuthRestException`) and use whatever
-accessor it exposes. Do not guess a name; if it exposes no code at all, fall back to
-`message?.lowercase()?.contains("invalid login credentials")`-style matching and note the change
-in a comment.
+Verified against auth-kt 3.1.4: `AuthRestException` is at that import, `errorCode` is a nullable
+`AuthErrorCode`, and all six constants above exist (of roughly seventy). If one does not resolve,
+the release renamed it — find the current name in the artifact rather than guessing.
+
+**Also add tests for these six branches.** `AuthRestException(errorCode: String,
+errorDescription: String, response: HttpResponse)` is public, `HttpResponse` has only abstract
+accessors so `mockk<HttpResponse>(relaxed = true)` satisfies it, and `mockk` is already on this
+module's test classpath — no live server needed. The constructor resolves the enum through
+`AuthErrorCode.Companion.fromValue()` against **snake_case wire values**, so read the real values
+out of the artifact instead of assuming them. Cover each mapped code, one real-but-unmapped code,
+and one unrecognised string — the last two pin the `else` branch.
 
 - [ ] **Step 6: Run the tests to verify they pass**
 
@@ -476,7 +498,9 @@ git commit -m "feat(data): add AuthRepository and map supabase failures to AuthE
 
 **Files:**
 - Create: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SupabaseAuthRepository.kt`
+- Create: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SessionStateMapping.kt`
 - Modify: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt`
+- Test: `core/data/src/test/kotlin/com/practice/thenewmovies/core/data/repository/SessionStateMappingTest.kt`
 
 - [ ] **Step 1: Write the implementation**
 
@@ -507,16 +531,12 @@ internal class SupabaseAuthRepository @Inject constructor(
     @Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
 
-    override val sessionState: Flow<SessionState> = client.auth.sessionStatus.map { status ->
-        when (status) {
-            is SessionStatus.Authenticated ->
-                status.session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
-
-            is SessionStatus.Initializing -> SessionState.Loading
-            is SessionStatus.NotAuthenticated -> SessionState.SignedOut
-            is SessionStatus.RefreshFailure -> SessionState.SignedOut
+    // runningFold, not map: the RefreshFailure branch needs the previous state to decide, and
+    // runningFold emits the initial value first so a fresh collector sees Loading immediately.
+    override val sessionState: Flow<SessionState> =
+        client.auth.sessionStatus.runningFold(SessionState.Loading as SessionState) { previous, status ->
+            status.toSessionState(previous)
         }
-    }
 
     override suspend fun signUp(email: String, password: String): AuthResult = attempt {
         client.auth.signUpWith(Email) {
@@ -546,7 +566,11 @@ internal class SupabaseAuthRepository @Inject constructor(
     }
 
     override suspend fun signOut() {
-        withContext(ioDispatcher) { runCatching { client.auth.signOut() } }
+        // The result is dropped on purpose: a revoked or expired token fails the server call
+        // while the local session is cleared anyway, and surfacing that would trap the user in a
+        // signed-in shell. Going through attempt() rather than runCatching matters — runCatching
+        // would swallow CancellationException too, breaking structured concurrency.
+        attempt { client.auth.signOut() }
     }
 
     private suspend fun attempt(block: suspend () -> Unit): AuthResult =
@@ -554,8 +578,8 @@ internal class SupabaseAuthRepository @Inject constructor(
             try {
                 block()
                 AuthResult.Success
-            } catch (throwable: Throwable) {
-                AuthResult.Failure(throwable.toAuthError())
+            } catch (exception: Exception) {
+                AuthResult.Failure(exception.toAuthError())
             }
         }
 
@@ -565,13 +589,56 @@ internal class SupabaseAuthRepository @Inject constructor(
 }
 ```
 
+The session mapping itself lives in `SessionStateMapping.kt` as a pure function, because it is
+the only real logic in this class and the class cannot be unit-tested without a live client:
+
+```kotlin
+internal fun SessionStatus.toSessionState(previous: SessionState): SessionState = when (this) {
+    is SessionStatus.Initializing -> SessionState.Loading
+
+    // A session with no user record is unusable for anything the app needs, so it folds into
+    // the same SignedOut bucket as NotAuthenticated.
+    is SessionStatus.Authenticated ->
+        session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
+
+    is SessionStatus.NotAuthenticated -> SessionState.SignedOut
+
+    is SessionStatus.RefreshFailure -> when (cause) {
+        // The refresh never reached the server, so the credentials are not known to be bad.
+        // Every screen renders from Room, and :app destroys the back stack on SignedOut — so
+        // ejecting the user to a login form over a lost second of signal would be wrong.
+        is RefreshFailureCause.NetworkError ->
+            previous.takeIf { it is SessionState.SignedIn } ?: SessionState.SignedOut
+
+        // Here the server answered and rejected the refresh: the token is likely revoked, from
+        // a password changed on another device or a deleted account.
+        is RefreshFailureCause.InternalServerError -> SessionState.SignedOut
+    }
+}
+```
+
+`SessionStatus`, `UserSession`, and `UserInfo` are plain data classes, so `SessionStateMappingTest`
+covers all seven branches directly — including that a `NetworkError` keeps a signed-in user signed
+in, and that an `InternalServerError` does not. `RefreshFailureCause.InternalServerError` needs a
+`RestException`, which needs a Ktor `HttpResponse`: `mockk<HttpResponse>(relaxed = true)` satisfies
+it, the same way `AuthErrorMappingTest` builds its `AuthRestException`.
+
+Note `SessionStatus.RefreshFailure` carries **only** a `cause` — it has no cached session, and
+`Auth.currentSessionOrNull()` returns null in that state too, which is why the previous state has
+to be folded through rather than read back from the client.
+
 Two notes for the engineer:
 
-- `toAuthError()` rethrows `CancellationException`, so the broad `catch (throwable: Throwable)`
-  above does not swallow cancellation.
+- The catch is `Exception`, not `Throwable`, on purpose: an `OutOfMemoryError` or a
+  `NoClassDefFoundError` from a missing transitive dependency must not become
+  `AuthError.Unknown` and invite the user to retry. `CancellationException` is a
+  `RuntimeException`, so it is still caught here — and `toAuthError()` rethrows it before mapping
+  anything, so cancellation still propagates.
 - `signOut()` deliberately ignores failures. A revoked or already-expired token makes the server
   call fail while the local session is cleared anyway; surfacing that would trap the user in a
-  signed-in shell they cannot leave.
+  signed-in shell they cannot leave. It routes through `attempt` and discards the result rather
+  than using `runCatching`, which catches `CancellationException` as well and would swallow a
+  cancelled scope.
 
 - [ ] **Step 2: Compile and fix the `when` branches**
 
