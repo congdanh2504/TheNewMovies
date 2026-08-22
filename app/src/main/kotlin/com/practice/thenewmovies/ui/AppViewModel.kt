@@ -18,10 +18,14 @@ package com.practice.thenewmovies.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.thenewmovies.core.data.repository.AuthRepository
+import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import com.practice.thenewmovies.core.model.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val watchlistRepository: WatchlistRepository,
 ) : ViewModel() {
 
     val sessionState: StateFlow<SessionState> = authRepository.sessionState
@@ -37,6 +42,16 @@ class AppViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = SessionState.Loading,
         )
+
+    init {
+        viewModelScope.launch {
+            sessionState
+                .filterIsInstance<SessionState.SignedIn>()
+                .map { it.user.id }
+                .distinctUntilChanged()
+                .collect { watchlistRepository.syncWatchlist() }
+        }
+    }
 
     fun signOut() {
         viewModelScope.launch { authRepository.signOut() }
