@@ -16,6 +16,9 @@
 package com.practice.thenewmovies.core.data.repository
 
 import com.practice.thenewmovies.core.model.AuthError
+import io.github.jan.supabase.auth.exception.AuthRestException
+import io.ktor.client.statement.HttpResponse
+import io.mockk.mockk
 import kotlinx.coroutines.CancellationException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -44,6 +47,29 @@ class AuthErrorMappingTest {
     fun `cancellation is rethrown, never mapped`() {
         assertThrows(CancellationException::class.java) {
             CancellationException("scope died").toAuthError()
+        }
+    }
+
+    @Test
+    fun `each supabase error code maps to the expected AuthError`() {
+        val response = mockk<HttpResponse>(relaxed = true)
+        val cases = listOf(
+            // the six codes this app maps
+            "invalid_credentials" to AuthError.InvalidCredentials,
+            "user_already_exists" to AuthError.EmailAlreadyRegistered,
+            "email_exists" to AuthError.EmailAlreadyRegistered,
+            "weak_password" to AuthError.WeakPassword,
+            "otp_expired" to AuthError.InvalidCode,
+            "otp_disabled" to AuthError.InvalidCode,
+            // a real but unmapped code: pins the `else` branch of the inner `when`
+            "session_expired" to AuthError.Unknown,
+            // a code string supabase never sends: pins the null-errorCode path
+            "not_a_real_code" to AuthError.Unknown,
+        )
+
+        cases.forEach { (wireValue, expected) ->
+            val exception = AuthRestException(wireValue, "description", response)
+            assertEquals("wireValue=$wireValue", expected, exception.toAuthError())
         }
     }
 }

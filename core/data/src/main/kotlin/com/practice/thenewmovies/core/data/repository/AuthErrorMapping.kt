@@ -16,6 +16,7 @@
 package com.practice.thenewmovies.core.data.repository
 
 import com.practice.thenewmovies.core.model.AuthError
+import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
@@ -23,19 +24,20 @@ import java.io.IOException
 /**
  * Maps a failure from supabase-kt onto the app's error vocabulary.
  *
- * Matching is done on the error code's `name` rather than on enum constants, so a renamed or
- * added code in a future supabase-kt release cannot break compilation — it just falls through to
- * [AuthError.Unknown]. The exact codes are verified by hand against the live project; see the
+ * An unmapped or newly added error code falls through to [AuthError.Unknown]. Matching is done
+ * on the [AuthErrorCode] constants directly, on purpose: a code this app maps that a future
+ * supabase-kt release removes or renames fails compilation, so the mapping gets revisited rather
+ * than silently degrading. The exact codes are verified by hand against the live project; see the
  * verification checklist in Slice B.
  */
 internal fun Throwable.toAuthError(): AuthError {
     if (this is CancellationException) throw this
     return when (this) {
-        is AuthRestException -> when (errorCode?.name) {
-            "InvalidCredentials" -> AuthError.InvalidCredentials
-            "UserAlreadyExists", "EmailExists" -> AuthError.EmailAlreadyRegistered
-            "WeakPassword" -> AuthError.WeakPassword
-            "OtpExpired", "OtpDisabled" -> AuthError.InvalidCode
+        is AuthRestException -> when (errorCode) {
+            AuthErrorCode.InvalidCredentials -> AuthError.InvalidCredentials
+            AuthErrorCode.UserAlreadyExists, AuthErrorCode.EmailExists -> AuthError.EmailAlreadyRegistered
+            AuthErrorCode.WeakPassword -> AuthError.WeakPassword
+            AuthErrorCode.OtpExpired, AuthErrorCode.OtpDisabled -> AuthError.InvalidCode
             else -> AuthError.Unknown
         }
 

@@ -34,5 +34,10 @@ interface AuthRepository {
     /** Verifies the recovery code, then sets [newPassword] on the account. */
     suspend fun resetPassword(email: String, code: String, newPassword: String): AuthResult
 
+    /**
+     * Always clears the local session, even if the server call to revoke it fails (for example
+     * because the token was already expired or revoked) — surfacing that failure would trap the
+     * user in a signed-in shell they cannot leave.
+     */
     suspend fun signOut()
 }
