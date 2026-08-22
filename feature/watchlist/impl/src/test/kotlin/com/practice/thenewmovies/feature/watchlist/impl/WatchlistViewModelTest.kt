@@ -18,6 +18,7 @@ package com.practice.thenewmovies.feature.watchlist.impl
 import app.cash.turbine.test
 import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.data.testWatchlistMovie
+import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import com.practice.thenewmovies.core.testing.repository.TestWatchlistRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -31,7 +32,10 @@ class WatchlistViewModelTest {
 
     private val watchlistRepository = TestWatchlistRepository()
 
-    private fun viewModel() = WatchlistViewModel(watchlistRepository)
+    private fun viewModel() = WatchlistViewModel(
+        watchlistRepository = watchlistRepository,
+        authRepository = TestAuthRepository(),
+    )
 
     @Test
     fun `starts in the loading state`() = runTest {
@@ -72,5 +76,18 @@ class WatchlistViewModelTest {
 
             assertEquals(WatchlistUiState.Empty, awaitItem())
         }
+    }
+
+    @Test
+    fun `signing out delegates to the auth repository`() = runTest {
+        val authRepository = TestAuthRepository()
+        val viewModel = WatchlistViewModel(
+            watchlistRepository = TestWatchlistRepository(),
+            authRepository = authRepository,
+        )
+
+        viewModel.onSignOutClick()
+
+        assertEquals(1, authRepository.signOutCount)
     }
 }
