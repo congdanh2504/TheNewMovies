@@ -1070,12 +1070,17 @@ class AppViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // The map comes FIRST on purpose. Filtering to SignedIn before deduplicating
+            // discards the SignedOut emission, so a sign-out followed by a sign-in as the same
+            // user reaches distinctUntilChanged as the same id twice and is silently swallowed —
+            // the sync then never runs again for that user. Mapping to a nullable id first makes
+            // signing out a distinct value. A token refresh still maps to the same non-null id
+            // and is still suppressed, which is the point of deduplicating at all.
             sessionState
-                .filterIsInstance<SessionState.SignedIn>()
-                .map { it.user.id }
+                .map { (it as? SessionState.SignedIn)?.user?.id }
                 .distinctUntilChanged()
-                .onEach { watchlistRepository.syncWatchlist() }
-                .collect()
+                .filterNotNull()
+                .collect { watchlistRepository.syncWatchlist() }
         }
     }
 }
@@ -1083,8 +1088,16 @@ class AppViewModel @Inject constructor(
 
 Add `import kotlinx.coroutines.flow.collect` if the compiler asks for it.
 
-`distinctUntilChanged()` on the user id, not on the state: a token refresh re-emits
-`SignedIn` with the same user, and syncing on every refresh would hammer Postgrest for nothing.
+`distinctUntilChanged()` on the user id, not on the state: a token refresh re-emits `SignedIn`
+with the same user, and syncing on every refresh would hammer Postgrest for nothing.
+
+**But it must be applied to a nullable id derived before any filtering.** Putting
+`filterIsInstance<SignedIn>()` first looks equivalent and is not: it drops the `SignedOut`
+emission, so signing out and back in as the same user is invisible and the sync never fires again.
+That bug shipped past 26 unit tests and was only caught on a device, because the obvious unit test
+— emit `SignedIn` twice and assert one sync — is indistinguishable from the broken case once the
+filter has run. The test to write is: sign in, sign **out**, sign in again as the same user, and
+assert two syncs.
 
 - [ ] **Step 2: Build**
 
