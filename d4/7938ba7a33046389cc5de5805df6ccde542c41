@@ -1,0 +1,27 @@
+core/data/src/test/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepositoryTest.kt
+  s_5373a0f018b70a::t_f849d1c18f7157 31
+  s_5373a0f018b70a::t_cfa085ce4ba127 197-207,209-211,213-214
+  s_5373a0f018b70a::t_330d682752dbda 28,34
+  s_5373a0f018b70a::t_6a39f2d4fd4d98 208,212
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/WatchlistRepository.kt
+  s_5373a0f018b70a::t_9a6633694fea50 29-35
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepository.kt
+  s_5373a0f018b70a::t_cbc3f621c4bf9a 26
+  s_5373a0f018b70a::t_dd7286fe130a39 89-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "d47938ba7a33046389cc5de5805df6ccde542c41",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
