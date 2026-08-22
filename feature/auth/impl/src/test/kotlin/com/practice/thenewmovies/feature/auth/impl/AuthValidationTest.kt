@@ -38,6 +38,11 @@ class AuthValidationTest {
     }
 
     @Test
+    fun `a bare at sign passes because the server is the authority`() {
+        assertNull(validateEmail("@"))
+    }
+
+    @Test
     fun `a short password is rejected`() {
         assertEquals(FieldError.PasswordTooShort, validatePassword("12345"))
     }

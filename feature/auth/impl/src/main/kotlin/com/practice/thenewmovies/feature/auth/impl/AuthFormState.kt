@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.auth.impl
 
 import com.practice.thenewmovies.core.model.AuthError
 
-enum class FieldError {
+internal enum class FieldError {
     EmailRequired,
     EmailInvalid,
     PasswordTooShort,
@@ -44,7 +44,7 @@ internal fun validateCode(code: String): FieldError? =
     if (code.length != CODE_LENGTH || !code.all { it.isDigit() }) FieldError.CodeInvalid else null
 
 /** Human text for the UI. Kept next to the errors so no screen invents its own wording. */
-fun FieldError.message(): String = when (this) {
+internal fun FieldError.message(): String = when (this) {
     FieldError.EmailRequired -> "Enter your email"
     FieldError.EmailInvalid -> "That does not look like an email address"
     FieldError.PasswordTooShort -> "At least $MIN_PASSWORD_LENGTH characters"
@@ -52,7 +52,7 @@ fun FieldError.message(): String = when (this) {
     FieldError.CodeInvalid -> "Enter the $CODE_LENGTH-digit code from the email"
 }
 
-fun AuthError.message(): String = when (this) {
+internal fun AuthError.message(): String = when (this) {
     AuthError.InvalidCredentials -> "Wrong email or password"
     AuthError.EmailAlreadyRegistered -> "That email already has an account"
     AuthError.WeakPassword -> "Pick a stronger password"
