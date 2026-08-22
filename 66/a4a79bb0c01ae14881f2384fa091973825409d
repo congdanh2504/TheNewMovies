@@ -1,0 +1,21 @@
+core/supabase/build.gradle.kts
+  s_5373a0f018b70a::t_152db911f3ea88 1-44
+settings.gradle.kts
+  s_5373a0f018b70a::t_d4b48162fb3b4c 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "66a4a79bb0c01ae14881f2384fa091973825409d",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
