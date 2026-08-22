@@ -1,0 +1,20 @@
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestAuthRepository.kt
+  s_5373a0f018b70a::t_ffe4947b23642c 32-35
+  s_5373a0f018b70a::t_0fd1a220dc3ae5 45-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "2f2a77dce356a6ce9d5339a01701731ebc43231c",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
