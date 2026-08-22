@@ -36,7 +36,6 @@ internal data class ResetPasswordUiState(
     val passwordError: FieldError? = null,
     val formError: AuthError? = null,
     val isSubmitting: Boolean = false,
-    val done: Boolean = false,
 )
 
 @HiltViewModel
@@ -88,7 +87,7 @@ internal class ResetPasswordViewModel @Inject constructor(
             )
             _uiState.update {
                 when (result) {
-                    AuthResult.Success -> it.copy(isSubmitting = false, done = true)
+                    AuthResult.Success -> it.copy(isSubmitting = false)
                     is AuthResult.Failure -> it.copy(isSubmitting = false, formError = result.error)
                 }
             }

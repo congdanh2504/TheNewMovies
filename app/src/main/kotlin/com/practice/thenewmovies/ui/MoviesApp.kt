@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -32,6 +33,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,12 +43,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.practice.thenewmovies.core.model.SessionState
 import com.practice.thenewmovies.core.navigation.NavigationState
 import com.practice.thenewmovies.core.navigation.Navigator
 import com.practice.thenewmovies.feature.detail.impl.navigation.detailEntry
@@ -59,7 +64,30 @@ import com.practice.thenewmovies.feature.watchlist.impl.navigation.watchlistEntr
 import com.practice.thenewmovies.navigation.TopLevelNavItem
 
 @Composable
-fun MoviesApp() {
+fun MoviesApp(viewModel: AppViewModel = hiltViewModel()) {
+    val sessionState by viewModel.sessionState.collectAsStateWithLifecycle()
+
+    when (sessionState) {
+        SessionState.Loading -> LoadingScreen()
+        SessionState.SignedOut -> AuthHost()
+        is SessionState.SignedIn -> SignedInApp()
+    }
+}
+
+@Composable
+private fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun SignedInApp() {
     val homeStack = rememberNavBackStack(HomeNavKey)
     val searchStack = rememberNavBackStack(SearchNavKey)
     val watchlistStack = rememberNavBackStack(WatchlistNavKey)
