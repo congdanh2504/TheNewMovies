@@ -23,6 +23,7 @@ import com.practice.thenewmovies.core.database.model.asEntity
 import com.practice.thenewmovies.core.database.model.asExternalModel
 import com.practice.thenewmovies.core.model.SessionState
 import com.practice.thenewmovies.core.model.WatchlistMovie
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -85,6 +86,21 @@ internal class DefaultWatchlistRepository @Inject constructor(
     }
 
     override suspend fun syncWatchlist() {
+        // syncWatchlist() is best-effort by contract: every unsent local change is already
+        // marked pendingSync, so a failure here -- including one from Room itself, not just the
+        // network calls already wrapped below -- loses nothing. The next sign-in retries.
+        // CancellationException must still propagate or structured concurrency breaks (see
+        // AuthErrorMapping.toAuthError()); OutOfMemoryError and friends are not caught either.
+        try {
+            syncWatchlistOrThrow()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // Swallowed on purpose -- see contract note above.
+        }
+    }
+
+    private suspend fun syncWatchlistOrThrow() {
         val id = currentUserId() ?: return
 
         watchlistDao.getPending(id).forEach { entity ->

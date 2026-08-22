@@ -25,10 +25,13 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
@@ -190,5 +193,23 @@ class DefaultWatchlistRepositoryTest {
         repository.syncWatchlist()
 
         coVerify(exactly = 0) { remote.fetchAll(any()) }
+    }
+
+    @Test
+    fun `a Room failure during sync does not propagate`() = runTest {
+        coEvery { dao.getPending("user-1") } throws IllegalStateException("disk full")
+
+        repository.syncWatchlist()
+
+        // No assertion beyond "returned normally" -- reaching this line is the test.
+    }
+
+    @Test
+    fun `cancellation during sync still propagates`() {
+        coEvery { dao.getPending("user-1") } throws CancellationException("cancelled")
+
+        assertThrows(CancellationException::class.java) {
+            runBlocking { repository.syncWatchlist() }
+        }
     }
 }
