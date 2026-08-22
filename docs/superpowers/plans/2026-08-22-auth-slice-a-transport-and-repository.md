@@ -358,7 +358,13 @@ interface AuthRepository {
     /** Sends a recovery mail containing a 6-digit code. */
     suspend fun sendPasswordReset(email: String): AuthResult
 
-    /** Verifies the recovery code, then sets [newPassword] on the account. */
+    /**
+     * Verifies the recovery code, then sets [newPassword] on the account.
+     *
+     * Verifying the code authenticates the session before the password is changed, so a failure
+     * from the second step leaves the user signed in with their old password still valid —
+     * callers must not assume [AuthResult.Failure] means nothing happened.
+     */
     suspend fun resetPassword(email: String, code: String, newPassword: String): AuthResult
 
     /**
@@ -526,6 +532,8 @@ internal class SupabaseAuthRepository @Inject constructor(
     override val sessionState: Flow<SessionState> = client.auth.sessionStatus.map { status ->
         when (status) {
             is SessionStatus.Authenticated ->
+                // A session with no user record is unusable for anything the app needs, so it
+                // is folded into the same SignedOut bucket as SessionStatus.NotAuthenticated.
                 status.session.toAuthUser()?.let(SessionState::SignedIn) ?: SessionState.SignedOut
 
             is SessionStatus.Initializing -> SessionState.Loading
@@ -562,7 +570,11 @@ internal class SupabaseAuthRepository @Inject constructor(
     }
 
     override suspend fun signOut() {
-        withContext(ioDispatcher) { runCatching { client.auth.signOut() } }
+        // The result is dropped on purpose: a revoked or expired token fails the server call
+        // while the local session is cleared anyway, and surfacing that would trap the user in a
+        // signed-in shell. Going through attempt() rather than runCatching matters — runCatching
+        // would swallow CancellationException too, breaking structured concurrency.
+        attempt { client.auth.signOut() }
     }
 
     private suspend fun attempt(block: suspend () -> Unit): AuthResult =
@@ -570,8 +582,8 @@ internal class SupabaseAuthRepository @Inject constructor(
             try {
                 block()
                 AuthResult.Success
-            } catch (throwable: Throwable) {
-                AuthResult.Failure(throwable.toAuthError())
+            } catch (exception: Exception) {
+                AuthResult.Failure(exception.toAuthError())
             }
         }
 
@@ -583,11 +595,16 @@ internal class SupabaseAuthRepository @Inject constructor(
 
 Two notes for the engineer:
 
-- `toAuthError()` rethrows `CancellationException`, so the broad `catch (throwable: Throwable)`
-  above does not swallow cancellation.
+- The catch is `Exception`, not `Throwable`, on purpose: an `OutOfMemoryError` or a
+  `NoClassDefFoundError` from a missing transitive dependency must not become
+  `AuthError.Unknown` and invite the user to retry. `CancellationException` is a
+  `RuntimeException`, so it is still caught here — and `toAuthError()` rethrows it before mapping
+  anything, so cancellation still propagates.
 - `signOut()` deliberately ignores failures. A revoked or already-expired token makes the server
   call fail while the local session is cleared anyway; surfacing that would trap the user in a
-  signed-in shell they cannot leave.
+  signed-in shell they cannot leave. It routes through `attempt` and discards the result rather
+  than using `runCatching`, which catches `CancellationException` as well and would swallow a
+  cancelled scope.
 
 - [ ] **Step 2: Compile and fix the `when` branches**
 
