@@ -55,4 +55,9 @@ dependencies {
     testImplementation(projects.core.testing)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // :app declares a testInstrumentationRunner, so AGP builds and launches an instrumentation
+    // APK even though this module has no androidTest sources. Without the runner artifact that
+    // APK dies with ClassNotFoundException, failing the whole-project connectedDebugAndroidTest.
+    androidTestImplementation(libs.androidx.test.runner)
 }
