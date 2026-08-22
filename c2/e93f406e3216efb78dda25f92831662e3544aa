@@ -1,0 +1,24 @@
+settings.gradle.kts
+  s_5373a0f018b70a::t_bf7b8ab8bf8228 49-50
+feature/auth/api/build.gradle.kts
+  s_5373a0f018b70a::t_582594b97da384 1-7
+feature/auth/api/src/main/kotlin/com/practice/thenewmovies/feature/auth/api/AuthNavKeys.kt
+  s_5373a0f018b70a::t_875a3a2c357734 1-15
+  s_5373a0f018b70a::t_582594b97da384 16-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c2e93f406e3216efb78dda25f92831662e3544aa",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
