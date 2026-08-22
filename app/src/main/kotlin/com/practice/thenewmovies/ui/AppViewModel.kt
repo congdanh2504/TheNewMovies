@@ -24,7 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -45,10 +45,15 @@ class AppViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // The id must be computed before distinctUntilChanged, not after: filtering to
+            // SignedIn first collapses a sign-out into nothing, so distinctUntilChanged sees
+            // "user-1", "user-1" across a sign-out/sign-in cycle for the same user and drops
+            // the second sync. Mapping first makes sign-out a real, distinct `null` value in
+            // the stream, so signing back in as the same user is seen as a change.
             sessionState
-                .filterIsInstance<SessionState.SignedIn>()
-                .map { it.user.id }
+                .map { (it as? SessionState.SignedIn)?.user?.id }
                 .distinctUntilChanged()
+                .filterNotNull()
                 .collect { watchlistRepository.syncWatchlist() }
         }
     }

@@ -67,7 +67,10 @@ class AppViewModelTest {
     }
 
     @Test
-    fun `the same user re-emitting does not sync again`() = runTest {
+    fun `a token refresh does not sync again`() = runTest {
+        // Supabase re-emits SignedIn(same id) on every token refresh, with no SignedOut
+        // in between. A sign-out cycle for the same user is a different case, covered by
+        // `signing back in as the same user syncs again` below.
         val authRepository = TestAuthRepository()
         val watchlistRepository = TestWatchlistRepository()
         val viewModel = AppViewModel(
@@ -79,6 +82,22 @@ class AppViewModelTest {
         authRepository.emitSignedIn(id = "user-1")
 
         assertEquals(1, watchlistRepository.syncCount)
+    }
+
+    @Test
+    fun `signing back in as the same user syncs again`() = runTest {
+        val authRepository = TestAuthRepository()
+        val watchlistRepository = TestWatchlistRepository()
+        val viewModel = AppViewModel(
+            authRepository = authRepository,
+            watchlistRepository = watchlistRepository,
+        )
+
+        authRepository.emitSignedIn(id = "user-1")
+        authRepository.emitSignedOut()
+        authRepository.emitSignedIn(id = "user-1")
+
+        assertEquals(2, watchlistRepository.syncCount)
     }
 
     @Test
