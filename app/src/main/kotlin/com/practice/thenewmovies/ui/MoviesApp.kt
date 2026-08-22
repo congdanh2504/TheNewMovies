@@ -70,7 +70,7 @@ fun MoviesApp(viewModel: AppViewModel = hiltViewModel()) {
     when (sessionState) {
         SessionState.Loading -> LoadingScreen()
         SessionState.SignedOut -> AuthHost()
-        is SessionState.SignedIn -> SignedInApp()
+        is SessionState.SignedIn -> SignedInApp(onSignOut = viewModel::signOut)
     }
 }
 
@@ -87,7 +87,7 @@ private fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SignedInApp() {
+private fun SignedInApp(onSignOut: () -> Unit) {
     val homeStack = rememberNavBackStack(HomeNavKey)
     val searchStack = rememberNavBackStack(SearchNavKey)
     val watchlistStack = rememberNavBackStack(WatchlistNavKey)
@@ -147,7 +147,7 @@ private fun SignedInApp() {
             entryProvider = entryProvider {
                 homeEntry(navigator)
                 searchEntry(navigator)
-                watchlistEntry(navigator)
+                watchlistEntry(navigator, onSignOut)
                 detailEntry(navigator)
             },
         )

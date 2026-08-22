@@ -55,6 +55,7 @@ import com.practice.thenewmovies.core.ui.component.RatingChip
 internal fun WatchlistScreen(
     onBackClick: () -> Unit,
     onMovieClick: (Int) -> Unit,
+    onSignOutClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: WatchlistViewModel = hiltViewModel(),
 ) {
@@ -64,7 +65,7 @@ internal fun WatchlistScreen(
         uiState = uiState,
         onBackClick = onBackClick,
         onMovieClick = onMovieClick,
-        onSignOutClick = viewModel::onSignOutClick,
+        onSignOutClick = onSignOutClick,
         modifier = modifier,
     )
 }

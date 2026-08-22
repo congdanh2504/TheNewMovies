@@ -22,11 +22,12 @@ import com.practice.thenewmovies.feature.detail.api.navigateToDetail
 import com.practice.thenewmovies.feature.watchlist.api.WatchlistNavKey
 import com.practice.thenewmovies.feature.watchlist.impl.WatchlistScreen
 
-fun EntryProviderScope<NavKey>.watchlistEntry(navigator: Navigator) {
+fun EntryProviderScope<NavKey>.watchlistEntry(navigator: Navigator, onSignOut: () -> Unit) {
     entry<WatchlistNavKey> {
         WatchlistScreen(
             onBackClick = { navigator.goBack() },
             onMovieClick = navigator::navigateToDetail,
+            onSignOutClick = onSignOut,
         )
     }
 }

@@ -17,20 +17,17 @@ package com.practice.thenewmovies.feature.watchlist.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.AuthRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class WatchlistViewModel @Inject constructor(
     watchlistRepository: WatchlistRepository,
-    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     val uiState: StateFlow<WatchlistUiState> = watchlistRepository.getWatchlist()
@@ -42,8 +39,4 @@ internal class WatchlistViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = WatchlistUiState.Loading,
         )
-
-    fun onSignOutClick() {
-        viewModelScope.launch { authRepository.signOut() }
-    }
 }

@@ -51,4 +51,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
+
+    testImplementation(projects.core.testing)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

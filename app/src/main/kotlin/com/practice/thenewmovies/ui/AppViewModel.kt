@@ -23,11 +23,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    authRepository: AuthRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     val sessionState: StateFlow<SessionState> = authRepository.sessionState
@@ -36,4 +37,8 @@ class AppViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = SessionState.Loading,
         )
+
+    fun signOut() {
+        viewModelScope.launch { authRepository.signOut() }
+    }
 }
