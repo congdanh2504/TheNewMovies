@@ -2053,66 +2053,61 @@ git commit -m "feat(app): gate the app on the Supabase session"
 
 ### Task 10: Sign out
 
+Sign-out lives in `AppViewModel`, **not** in `WatchlistViewModel`. It is an app-level action whose
+completion determines whether the signed-in UI should exist at all, so hosting it in a ViewModel
+scoped to one tab's nav entry is inverted: tapping the Watch List back arrow switches tabs, which
+clears that entry's `ViewModelStore` and cancels the scope mid-call, leaving the user silently
+signed in. `AppViewModel` is created at the root of `MoviesApp` and survives every nav change
+inside the signed-in app.
+
 **Files:**
-- Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModel.kt`
+- Modify: `app/src/main/kotlin/com/practice/thenewmovies/ui/AppViewModel.kt` — add `signOut()`
+- Modify: `app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt` — thread `onSignOut` into `SignedInApp`
+- Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/navigation/WatchlistEntry.kt` — gains an `onSignOut` parameter
 - Modify: `feature/watchlist/impl/src/main/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistScreen.kt`
-- Test: `feature/watchlist/impl/src/test/kotlin/com/practice/thenewmovies/feature/watchlist/impl/WatchlistViewModelTest.kt`
+- Test: `app/src/test/kotlin/com/practice/thenewmovies/ui/AppViewModelTest.kt`
 
 - [ ] **Step 1: Write the failing test**
 
-Add to the existing `WatchlistViewModelTest`:
+Create `app/src/test/kotlin/com/practice/thenewmovies/ui/AppViewModelTest.kt`:
 
 ```kotlin
     @Test
     fun `signing out delegates to the auth repository`() = runTest {
         val authRepository = TestAuthRepository()
-        val viewModel = WatchlistViewModel(
-            watchlistRepository = TestWatchlistRepository(),
-            authRepository = authRepository,
-        )
 
-        viewModel.onSignOutClick()
+        AppViewModel(authRepository).signOut()
 
         assertEquals(1, authRepository.signOutCount)
     }
 ```
 
-Add the imports it needs: `com.practice.thenewmovies.core.testing.repository.TestAuthRepository`
-and, if the existing tests construct the ViewModel positionally, update those call sites to pass
-the new argument.
+plus one asserting `sessionState` starts at `SessionState.Loading`. `:app` may need
+`testImplementation(projects.core.testing)` added to its build file.
 
 - [ ] **Step 2: Run it to verify it fails**
 
 Run: `./gradlew :feature:watchlist:impl:testDebugUnitTest`
 Expected: FAIL — the constructor takes one argument, and `onSignOutClick` does not exist.
 
-- [ ] **Step 3: Extend the ViewModel**
+- [ ] **Step 3: Add `signOut()` to `AppViewModel`**
+
+`WatchlistViewModel` is NOT touched — it keeps its single `watchlistRepository` parameter.
 
 ```kotlin
-@HiltViewModel
-internal class WatchlistViewModel @Inject constructor(
-    watchlistRepository: WatchlistRepository,
-    private val authRepository: AuthRepository,
-) : ViewModel() {
-
-    val uiState: StateFlow<WatchlistUiState> = watchlistRepository.getWatchlist()
-        .map { movies ->
-            if (movies.isEmpty()) WatchlistUiState.Empty else WatchlistUiState.Success(movies)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = WatchlistUiState.Loading,
-        )
-
-    fun onSignOutClick() {
+    fun signOut() {
         viewModelScope.launch { authRepository.signOut() }
     }
-}
 ```
 
-New imports: `com.practice.thenewmovies.core.data.repository.AuthRepository` and
-`kotlinx.coroutines.launch`.
+`authRepository` becomes a `private val`. Then thread the callback down: `MoviesApp`'s `SignedIn`
+branch calls `SignedInApp(onSignOut = viewModel::signOut)`, `SignedInApp` passes it to
+`watchlistEntry(navigator, onSignOut)`, and the entry passes it to the screen as `onSignOutClick`.
+Do not create a second `hiltViewModel()` inside `SignedInApp`.
+
+The scope is still the Activity's, so killing the app mid-sign-out leaves the session intact. That
+is fine: nothing was sent and nothing is inconsistent, and the next launch simply lands the user
+signed in.
 
 - [ ] **Step 4: Run the test to verify it passes**
 
