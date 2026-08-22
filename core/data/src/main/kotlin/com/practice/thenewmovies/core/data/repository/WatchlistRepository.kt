@@ -25,4 +25,13 @@ interface WatchlistRepository {
     suspend fun addToWatchlist(movie: WatchlistMovie)
     suspend fun removeFromWatchlist(movieId: Int)
     suspend fun setRating(movieId: Int, rating: Float)
+
+    /**
+     * Pushes local changes, then pulls the server's rows. Called on sign-in.
+     *
+     * Never throws (except [kotlinx.coroutines.CancellationException]): a failure -- network or
+     * otherwise -- leaves the affected rows marked pending and simply gives up for this call, so
+     * the next sign-in retries. Callers do not need to guard this call themselves.
+     */
+    suspend fun syncWatchlist()
 }

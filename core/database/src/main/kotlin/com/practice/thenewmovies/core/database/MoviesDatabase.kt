@@ -36,7 +36,7 @@ import com.practice.thenewmovies.core.database.entity.WatchlistEntity
         ReviewEntity::class,
         WatchlistEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 abstract class MoviesDatabase : RoomDatabase() {

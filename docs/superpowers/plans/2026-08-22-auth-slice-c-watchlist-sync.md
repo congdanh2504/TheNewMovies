@@ -1070,12 +1070,17 @@ class AppViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // The map comes FIRST on purpose. Filtering to SignedIn before deduplicating
+            // discards the SignedOut emission, so a sign-out followed by a sign-in as the same
+            // user reaches distinctUntilChanged as the same id twice and is silently swallowed —
+            // the sync then never runs again for that user. Mapping to a nullable id first makes
+            // signing out a distinct value. A token refresh still maps to the same non-null id
+            // and is still suppressed, which is the point of deduplicating at all.
             sessionState
-                .filterIsInstance<SessionState.SignedIn>()
-                .map { it.user.id }
+                .map { (it as? SessionState.SignedIn)?.user?.id }
                 .distinctUntilChanged()
-                .onEach { watchlistRepository.syncWatchlist() }
-                .collect()
+                .filterNotNull()
+                .collect { watchlistRepository.syncWatchlist() }
         }
     }
 }
@@ -1083,8 +1088,16 @@ class AppViewModel @Inject constructor(
 
 Add `import kotlinx.coroutines.flow.collect` if the compiler asks for it.
 
-`distinctUntilChanged()` on the user id, not on the state: a token refresh re-emits
-`SignedIn` with the same user, and syncing on every refresh would hammer Postgrest for nothing.
+`distinctUntilChanged()` on the user id, not on the state: a token refresh re-emits `SignedIn`
+with the same user, and syncing on every refresh would hammer Postgrest for nothing.
+
+**But it must be applied to a nullable id derived before any filtering.** Putting
+`filterIsInstance<SignedIn>()` first looks equivalent and is not: it drops the `SignedOut`
+emission, so signing out and back in as the same user is invisible and the sync never fires again.
+That bug shipped past 26 unit tests and was only caught on a device, because the obvious unit test
+— emit `SignedIn` twice and assert one sync — is indistinguishable from the broken case once the
+filter has run. The test to write is: sign in, sign **out**, sign in again as the same user, and
+assert two syncs.
 
 - [ ] **Step 2: Build**
 
@@ -1153,7 +1166,38 @@ git add -A && git commit -m "style: apply spotless" || echo "nothing to commit"
 - Every box in Task 7 Step 3 is checked
 - A fresh install signed in as an existing user shows that user's watchlist
 
+## Findings from executing tasks 2 to 4
+
+- **Tasks 2, 3 and 4 were executed as one commit**, not three. They are mutually dependent:
+  `WatchlistRow`'s mapping needs the new entity columns, and `DefaultWatchlistRepository` will not
+  compile without both. Splitting them would have meant committing a tree that does not build.
+- **Both unverified API shapes in this plan turned out correct**, checked against the resolved
+  sources rather than assumed: postgrest-kt 3.1.4 exposes `select { filter { eq(...) } }` and
+  `delete { filter { ... } }` as written, and Room 2.7.1 has
+  `fallbackToDestructiveMigration(dropAllTables: Boolean)` directly — no deprecated fallback needed.
+- **`core:data` needed `testImplementation(projects.core.testing)`.** That looks like a dependency
+  cycle (`core:testing` depends on `core:data`) but is not one — a test configuration depending on
+  another module's main output is fine, and both the targeted test task and the full build confirm it.
+- **`@OptIn(ExperimentalCoroutinesApi::class)` is still required** for `flatMapLatest` at the pinned
+  coroutines 1.10.2.
+- **Room stores `Boolean` as INTEGER 0/1**, so the DAO's raw `pendingSync = 1` predicates match what
+  Room generates — proven on-device rather than reasoned about.
+- **`deleteSynced` then `upsertAll` is not wrapped in a `@Transaction`**, so a live collector on
+  `getAll()` can observe an empty list for an instant mid-sync. Sync only runs at sign-in, so this is
+  a cosmetic flicker rather than data loss; it is left alone deliberately.
+
 ## Known limits, stated rather than hidden
+
+- **A synced watchlist movie cannot be opened offline until its detail has been fetched once.**
+  Sync restores the `watchlist` row, which carries enough for the list item (title, runtime, genre,
+  rating), but not a `MovieDetailEntity`. Nothing triggers `refreshDetail(id)` for a synced row, so
+  on a fresh install the Detail screen for a movie the user has explicitly saved shows "Could not
+  load this movie" until they open it online once. Bookmarking lives only on the Detail screen, so
+  an offline bookmark is also unreachable in that state. This is pre-existing Detail behaviour
+  rather than something sync introduced, and it is left alone deliberately — fixing it means either
+  fetching details for every synced row at sign-in, or teaching Detail to render from a watchlist
+  row alone. Worth revisiting if offline use of the watchlist matters.
+
 
 - **Sync runs only at sign-in.** A change made on another device appears after a sign-out and
   sign-in, not while the app is open. Realtime subscriptions or a pull-to-refresh would fix it;

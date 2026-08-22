@@ -13,13 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.database.model
+package com.practice.thenewmovies.core.data.remote
 
 import com.practice.thenewmovies.core.database.entity.WatchlistEntity
-import com.practice.thenewmovies.core.model.WatchlistMovie
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-fun WatchlistEntity.asExternalModel() = WatchlistMovie(
-    id = movieId,
+/**
+ * One row of `public.watchlist`. `updated_at` is deliberately absent: Postgres defaults it, and
+ * sending a client clock would make it useless as a merge signal later.
+ */
+@Serializable
+internal data class WatchlistRow(
+    @SerialName("user_id") val userId: String,
+    @SerialName("movie_id") val movieId: Int,
+    @SerialName("title") val title: String,
+    @SerialName("poster_path") val posterPath: String?,
+    @SerialName("backdrop_path") val backdropPath: String?,
+    @SerialName("release_date") val releaseDate: String,
+    @SerialName("vote_average") val voteAverage: Double,
+    @SerialName("runtime") val runtime: Int,
+    @SerialName("genre") val genre: String,
+    @SerialName("user_rating") val userRating: Float?,
+)
+
+internal fun WatchlistEntity.asRow() = WatchlistRow(
+    userId = userId,
+    movieId = movieId,
     title = title,
     posterPath = posterPath,
     backdropPath = backdropPath,
@@ -30,13 +50,9 @@ fun WatchlistEntity.asExternalModel() = WatchlistMovie(
     userRating = userRating,
 )
 
-fun WatchlistMovie.asEntity(
-    userId: String,
-    pendingSync: Boolean = false,
-    deleted: Boolean = false,
-) = WatchlistEntity(
+internal fun WatchlistRow.asEntity() = WatchlistEntity(
     userId = userId,
-    movieId = id,
+    movieId = movieId,
     title = title,
     posterPath = posterPath,
     backdropPath = backdropPath,
@@ -45,6 +61,6 @@ fun WatchlistMovie.asEntity(
     runtime = runtime,
     genre = genre,
     userRating = userRating,
-    pendingSync = pendingSync,
-    deleted = deleted,
+    pendingSync = false,
+    deleted = false,
 )

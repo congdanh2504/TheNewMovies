@@ -37,7 +37,11 @@ internal object DatabaseModule {
     @Provides
     @Singleton
     fun providesMoviesDatabase(@ApplicationContext context: Context): MoviesDatabase =
-        Room.databaseBuilder(context, MoviesDatabase::class.java, "movies.db").build()
+        Room.databaseBuilder(context, MoviesDatabase::class.java, "movies.db")
+            // The app is unreleased and every pre-auth watchlist row belongs to no user, so
+            // there is nothing worth migrating.
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
 
     @Provides
     fun providesMovieDao(database: MoviesDatabase): MovieDao = database.movieDao()

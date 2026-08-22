@@ -33,6 +33,9 @@ class WatchlistDaoTest {
     private lateinit var database: MoviesDatabase
     private lateinit var dao: WatchlistDao
 
+    private val alice = "user-alice"
+    private val bob = "user-bob"
+
     @Before
     fun setUp() {
         database = Room.inMemoryDatabaseBuilder(
@@ -43,54 +46,106 @@ class WatchlistDaoTest {
     }
 
     @After
-    fun tearDown() = database.close()
+    fun tearDown() {
+        database.close()
+    }
 
-    private fun entry(movieId: Int, title: String = "Movie $movieId") = WatchlistEntity(
+    private fun entity(
+        userId: String,
+        movieId: Int,
+        title: String = "Dune",
+        pendingSync: Boolean = false,
+        deleted: Boolean = false,
+    ) = WatchlistEntity(
+        userId = userId,
         movieId = movieId,
         title = title,
         posterPath = null,
         backdropPath = null,
-        releaseDate = "2024-01-01",
-        voteAverage = 7.0,
-        runtime = 120,
-        genre = "Action",
+        releaseDate = "2021-10-22",
+        voteAverage = 7.8,
+        runtime = 155,
+        genre = "Science Fiction",
+        userRating = null,
+        pendingSync = pendingSync,
+        deleted = deleted,
     )
 
     @Test
-    fun getAll_isSortedByTitle() = runTest {
-        dao.upsert(entry(1, title = "Zulu"))
-        dao.upsert(entry(2, title = "Alien"))
+    fun rowsAreScopedToTheirUser() = runTest {
+        dao.upsert(entity(alice, movieId = 1, title = "Dune"))
+        dao.upsert(entity(bob, movieId = 2, title = "Arrival"))
 
-        assertEquals(listOf(2, 1), dao.getAll().first().map { it.movieId })
+        assertEquals(listOf("Dune"), dao.getAll(alice).first().map { it.title })
+        assertEquals(listOf("Arrival"), dao.getAll(bob).first().map { it.title })
     }
 
     @Test
-    fun existsById_reflectsInsertAndDelete() = runTest {
-        assertFalse(dao.existsById(1).first())
+    fun theSameMovieCanBeSavedByTwoUsers() = runTest {
+        dao.upsert(entity(alice, movieId = 1))
+        dao.upsert(entity(bob, movieId = 1))
 
-        dao.upsert(entry(1))
-        assertTrue(dao.existsById(1).first())
-
-        dao.deleteById(1)
-        assertFalse(dao.existsById(1).first())
+        assertEquals(1, dao.getAll(alice).first().size)
+        assertEquals(1, dao.getAll(bob).first().size)
     }
 
     @Test
-    fun updateRating_storesTheRating() = runTest {
-        dao.upsert(entry(1))
+    fun softDeletedRowsAreHiddenFromReads() = runTest {
+        dao.upsert(entity(alice, movieId = 1))
 
-        dao.updateRating(movieId = 1, rating = 4.5f)
+        dao.markDeleted(alice, movieId = 1)
 
-        assertEquals(4.5f, dao.getRating(1).first())
+        assertTrue(dao.getAll(alice).first().isEmpty())
+        assertFalse(dao.existsById(alice, movieId = 1).first())
     }
 
     @Test
-    fun upsert_replacesAnExistingEntry() = runTest {
-        dao.upsert(entry(1, title = "Old"))
-        dao.upsert(entry(1, title = "New"))
+    fun markingDeletedAlsoMarksTheRowPending() = runTest {
+        dao.upsert(entity(alice, movieId = 1))
 
-        val all = dao.getAll().first()
-        assertEquals(1, all.size)
-        assertEquals("New", all.single().title)
+        dao.markDeleted(alice, movieId = 1)
+
+        val pending = dao.getPending(alice)
+        assertEquals(1, pending.size)
+        assertTrue(pending.single().deleted)
+    }
+
+    @Test
+    fun ratingAMovieMarksItPending() = runTest {
+        dao.upsert(entity(alice, movieId = 1))
+
+        dao.updateRating(alice, movieId = 1, rating = 4.5f)
+
+        assertEquals(4.5f, dao.getRating(alice, movieId = 1).first())
+        assertEquals(listOf(1), dao.getPending(alice).map { it.movieId })
+    }
+
+    @Test
+    fun clearingPendingLeavesTheRow() = runTest {
+        dao.upsert(entity(alice, movieId = 1, pendingSync = true))
+
+        dao.clearPending(alice, movieId = 1)
+
+        assertTrue(dao.getPending(alice).isEmpty())
+        assertEquals(1, dao.getAll(alice).first().size)
+    }
+
+    @Test
+    fun deletingSyncedRowsKeepsPendingOnes() = runTest {
+        dao.upsert(entity(alice, movieId = 1, pendingSync = true))
+        dao.upsert(entity(alice, movieId = 2, pendingSync = false))
+
+        dao.deleteSynced(alice)
+
+        assertEquals(listOf(1), dao.getAll(alice).first().map { it.movieId })
+    }
+
+    @Test
+    fun hardDeleteRemovesTheRowEntirely() = runTest {
+        dao.upsert(entity(alice, movieId = 1, deleted = true, pendingSync = true))
+
+        dao.deleteById(alice, movieId = 1)
+
+        assertTrue(dao.getPending(alice).isEmpty())
     }
 }
