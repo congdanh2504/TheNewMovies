@@ -80,7 +80,10 @@ internal class SupabaseAuthRepository @Inject constructor(
     }
 
     override suspend fun signOut() {
-        withContext(ioDispatcher) { runCatching { client.auth.signOut() } }
+        // The result is dropped on purpose: a revoked or expired token fails the server call
+        // while the local session is cleared anyway, and surfacing that would trap the user in a
+        // signed-in shell. attempt() still lets CancellationException propagate.
+        attempt { client.auth.signOut() }
     }
 
     private suspend fun attempt(block: suspend () -> Unit): AuthResult =
