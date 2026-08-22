@@ -1,0 +1,19 @@
+core/designsystem/src/main/res/drawable/core_designsystem_ic_logout.xml
+  s_5373a0f018b70a::t_0d583e6ff7a9d1 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "924b4cb4d873fb7d6dac7637f2ec90a59286c1e9",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
