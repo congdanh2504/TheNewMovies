@@ -23,6 +23,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 import com.practice.thenewmovies.core.model.AuthError
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -75,7 +76,7 @@ class LoginScreenTest {
 
         composeTestRule.onNodeWithTag("login_submit").performClick()
 
-        assert(submitted)
+        assertTrue("onSubmit was not invoked", submitted)
     }
 
     @Test
@@ -85,6 +86,6 @@ class LoginScreenTest {
 
         composeTestRule.onNodeWithTag("login_to_signup").performClick()
 
-        assert(tapped)
+        assertTrue("onSignUpClick was not invoked", tapped)
     }
 }
