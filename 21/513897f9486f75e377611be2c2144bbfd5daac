@@ -1,0 +1,23 @@
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/AuthUser.kt
+  s_5373a0f018b70a::t_6ef0dd1ec0b719 1-15
+  s_5373a0f018b70a::t_6a7ceb650896e7 16-30
+core/model/src/main/kotlin/com/practice/thenewmovies/core/model/AuthResult.kt
+  s_5373a0f018b70a::t_75c77b948fa1de 16-31
+  s_5373a0f018b70a::t_6ef0dd1ec0b719 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "21513897f9486f75e377611be2c2144bbfd5daac",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "unknown"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
