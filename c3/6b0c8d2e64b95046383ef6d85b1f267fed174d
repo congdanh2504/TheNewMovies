@@ -1,0 +1,48 @@
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepository.kt
+  s_5373a0f018b70a::t_5235ae185adfc6 18-20,24,26,28-30,35,39-40,43,45-51,53-55,57-59,61-72,74-127
+core/database/src/androidTest/kotlin/com/practice/thenewmovies/core/database/dao/WatchlistDaoTest.kt
+  s_5373a0f018b70a::t_19f3174a8825bd 36-38,49-51,53-60,65-71,75-106,108-110,114-115,117,119-120,124-125,127,129-130,134-147,149
+core/database/src/main/kotlin/com/practice/thenewmovies/core/database/entity/WatchlistEntity.kt
+  s_5373a0f018b70a::t_40a5cb85263dec 20,22-23,32-35
+core/database/src/main/kotlin/com/practice/thenewmovies/core/database/model/WatchlistEntityExt.kt
+  s_5373a0f018b70a::t_a69b9a2d1a1f1f 33-38,48-49
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/WatchlistRepository.kt
+  s_5373a0f018b70a::t_8ac5d4fe121a94 28-30
+core/database/src/main/kotlin/com/practice/thenewmovies/core/database/dao/WatchlistDao.kt
+  s_5373a0f018b70a::t_3feafed3b3fdd2 30-58,60-61,63-66,68-70,72-74
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/remote/WatchlistRemoteDataSource.kt
+  s_5373a0f018b70a::t_e41c02bf961af8 1-56
+core/data/build.gradle.kts
+  s_5373a0f018b70a::t_06675ab35ddd79 4
+  s_5373a0f018b70a::t_4a1e61bc263992 23
+core/data/src/test/kotlin/com/practice/thenewmovies/core/data/repository/DefaultWatchlistRepositoryTest.kt
+  s_5373a0f018b70a::t_258cb4d82aed69 18-19,23-24,32,34,39-90,93-160,162,164,166-167,171-178,181-183,187-190,192
+core/database/src/main/kotlin/com/practice/thenewmovies/core/database/di/DatabaseModule.kt
+  s_5373a0f018b70a::t_d596fb8863dec7 40-44
+core/database/schemas/com.practice.thenewmovies.core.database.MoviesDatabase/2.json
+  s_5373a0f018b70a::t_097bedac929af2 1-353
+core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestWatchlistRepository.kt
+  s_5373a0f018b70a::t_3e91653d54a056 50-56
+core/data/src/test/kotlin/com/practice/thenewmovies/core/data/remote/WatchlistRowMappingTest.kt
+  s_5373a0f018b70a::t_bb4cf401c8e319 1-71
+core/database/src/main/kotlin/com/practice/thenewmovies/core/database/MoviesDatabase.kt
+  s_5373a0f018b70a::t_de42254fc7966e 39
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/remote/WatchlistRow.kt
+  s_5373a0f018b70a::t_2525aa3995c3f1 1-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c36b0c8d2e64b95046383ef6d85b1f267fed174d",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
