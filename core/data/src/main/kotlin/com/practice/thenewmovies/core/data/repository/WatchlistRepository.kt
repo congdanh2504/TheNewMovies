@@ -25,4 +25,7 @@ interface WatchlistRepository {
     suspend fun addToWatchlist(movie: WatchlistMovie)
     suspend fun removeFromWatchlist(movieId: Int)
     suspend fun setRating(movieId: Int, rating: Float)
+
+    /** Pushes local changes, then pulls the server's rows. Called on sign-in. */
+    suspend fun syncWatchlist()
 }

@@ -47,6 +47,13 @@ class TestWatchlistRepository : WatchlistRepository {
         }
     }
 
+    var syncCount = 0
+        private set
+
+    override suspend fun syncWatchlist() {
+        syncCount++
+    }
+
     fun emit(value: List<WatchlistMovie>) {
         movies.value = value
     }

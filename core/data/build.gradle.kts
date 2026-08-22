@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.themovies.android.library)
     alias(libs.plugins.themovies.android.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -19,4 +20,5 @@ dependencies {
     implementation(libs.retrofit)
 
     testImplementation(libs.mockk)
+    testImplementation(projects.core.testing)
 }

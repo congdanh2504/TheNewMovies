@@ -16,11 +16,11 @@
 package com.practice.thenewmovies.core.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "watchlist")
+@Entity(tableName = "watchlist", primaryKeys = ["userId", "movieId"])
 data class WatchlistEntity(
-    @PrimaryKey val movieId: Int,
+    val userId: String,
+    val movieId: Int,
     val title: String,
     val posterPath: String?,
     val backdropPath: String?,
@@ -29,4 +29,8 @@ data class WatchlistEntity(
     val runtime: Int,
     val genre: String,
     val userRating: Float? = null,
+    /** Local change not yet accepted by Postgres. */
+    val pendingSync: Boolean = false,
+    /** Soft delete, so an offline un-bookmark stays replayable. */
+    val deleted: Boolean = false,
 )

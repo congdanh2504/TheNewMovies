@@ -27,18 +27,49 @@ interface WatchlistDao {
     @Upsert
     suspend fun upsert(entity: WatchlistEntity)
 
-    @Query("DELETE FROM watchlist WHERE movieId = :movieId")
-    suspend fun deleteById(movieId: Int)
+    @Upsert
+    suspend fun upsertAll(entities: List<WatchlistEntity>)
 
-    @Query("SELECT * FROM watchlist ORDER BY title ASC")
-    fun getAll(): Flow<List<WatchlistEntity>>
+    @Query(
+        "SELECT * FROM watchlist WHERE userId = :userId AND deleted = 0 ORDER BY title ASC",
+    )
+    fun getAll(userId: String): Flow<List<WatchlistEntity>>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM watchlist WHERE movieId = :movieId)")
-    fun existsById(movieId: Int): Flow<Boolean>
+    @Query(
+        "SELECT EXISTS(SELECT 1 FROM watchlist " +
+            "WHERE userId = :userId AND movieId = :movieId AND deleted = 0)",
+    )
+    fun existsById(userId: String, movieId: Int): Flow<Boolean>
 
-    @Query("UPDATE watchlist SET userRating = :rating WHERE movieId = :movieId")
-    suspend fun updateRating(movieId: Int, rating: Float)
+    @Query("SELECT userRating FROM watchlist WHERE userId = :userId AND movieId = :movieId")
+    fun getRating(userId: String, movieId: Int): Flow<Float?>
 
-    @Query("SELECT userRating FROM watchlist WHERE movieId = :movieId")
-    fun getRating(movieId: Int): Flow<Float?>
+    @Query(
+        "UPDATE watchlist SET userRating = :rating, pendingSync = 1 " +
+            "WHERE userId = :userId AND movieId = :movieId",
+    )
+    suspend fun updateRating(userId: String, movieId: Int, rating: Float)
+
+    /** Soft delete: keeps the row so the deletion can be pushed later. */
+    @Query(
+        "UPDATE watchlist SET deleted = 1, pendingSync = 1 " +
+            "WHERE userId = :userId AND movieId = :movieId",
+    )
+    suspend fun markDeleted(userId: String, movieId: Int)
+
+    @Query("SELECT * FROM watchlist WHERE userId = :userId AND pendingSync = 1")
+    suspend fun getPending(userId: String): List<WatchlistEntity>
+
+    @Query(
+        "UPDATE watchlist SET pendingSync = 0 WHERE userId = :userId AND movieId = :movieId",
+    )
+    suspend fun clearPending(userId: String, movieId: Int)
+
+    /** Hard delete, used once a soft-deleted row has been accepted by Postgres. */
+    @Query("DELETE FROM watchlist WHERE userId = :userId AND movieId = :movieId")
+    suspend fun deleteById(userId: String, movieId: Int)
+
+    /** Clears the cache before a pull, leaving unsynced local changes alone. */
+    @Query("DELETE FROM watchlist WHERE userId = :userId AND pendingSync = 0")
+    suspend fun deleteSynced(userId: String)
 }
