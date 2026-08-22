@@ -61,7 +61,9 @@ internal class LoginViewModel @Inject constructor(
         val emailError = validateEmail(email)
         val passwordError = validatePassword(state.password)
         if (emailError != null || passwordError != null) {
-            _uiState.update { it.copy(emailError = emailError, passwordError = passwordError) }
+            _uiState.update {
+                it.copy(emailError = emailError, passwordError = passwordError, formError = null)
+            }
             return
         }
 

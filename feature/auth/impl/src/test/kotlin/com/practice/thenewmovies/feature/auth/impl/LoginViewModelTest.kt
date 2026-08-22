@@ -20,6 +20,7 @@ import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -41,8 +42,9 @@ class LoginViewModelTest {
         assertEquals("", state.email)
         assertEquals("", state.password)
         assertNull(state.emailError)
+        assertNull(state.passwordError)
         assertNull(state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
@@ -89,7 +91,7 @@ class LoginViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(AuthError.InvalidCredentials, state.formError)
-        assertTrue(!state.isSubmitting)
+        assertFalse(state.isSubmitting)
     }
 
     @Test
