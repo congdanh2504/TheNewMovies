@@ -301,8 +301,9 @@ enum class AuthError {
 
 - [ ] **Step 3: Compile**
 
-Run: `./gradlew :core:model:compileDebugKotlin`
-Expected: BUILD SUCCESSFUL.
+Run: `./gradlew :core:model:compileKotlin`
+Expected: BUILD SUCCESSFUL. Note `core:model` is a JVM library (`themovies.jvm.library`), so it
+has no `compileDebugKotlin` task — that name only exists on the Android modules.
 
 - [ ] **Step 4: Format and commit**
 
@@ -360,6 +361,11 @@ interface AuthRepository {
     /** Verifies the recovery code, then sets [newPassword] on the account. */
     suspend fun resetPassword(email: String, code: String, newPassword: String): AuthResult
 
+    /**
+     * Clears the session. Deliberately returns no result: a revoked or expired token makes the
+     * server call fail while the local session is cleared anyway, and surfacing that would trap
+     * the user in a signed-in shell they cannot leave.
+     */
     suspend fun signOut()
 }
 ```
@@ -422,6 +428,7 @@ Expected: FAIL — `Unresolved reference: toAuthError`.
 package com.practice.thenewmovies.core.data.repository
 
 import com.practice.thenewmovies.core.model.AuthError
+import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
@@ -429,19 +436,22 @@ import java.io.IOException
 /**
  * Maps a failure from supabase-kt onto the app's error vocabulary.
  *
- * Matching is done on the error code's `name` rather than on enum constants, so a renamed or
- * added code in a future supabase-kt release cannot break compilation — it just falls through to
- * [AuthError.Unknown]. The exact codes are verified by hand against the live project; see the
- * verification checklist in Slice B.
+ * An unmapped or newly added supabase code falls through to [AuthError.Unknown]. A code this app
+ * does map, that a future supabase-kt release renames or removes, will fail compilation on
+ * purpose, so the mapping gets revisited instead of silently degrading to a generic message.
+ * These paths are also walked by hand against the live project; see the checklist in Slice B.
  */
 internal fun Throwable.toAuthError(): AuthError {
     if (this is CancellationException) throw this
     return when (this) {
-        is AuthRestException -> when (errorCode?.name) {
-            "InvalidCredentials" -> AuthError.InvalidCredentials
-            "UserAlreadyExists", "EmailExists" -> AuthError.EmailAlreadyRegistered
-            "WeakPassword" -> AuthError.WeakPassword
-            "OtpExpired", "OtpDisabled" -> AuthError.InvalidCode
+        is AuthRestException -> when (errorCode) {
+            AuthErrorCode.InvalidCredentials -> AuthError.InvalidCredentials
+            AuthErrorCode.UserAlreadyExists,
+            AuthErrorCode.EmailExists,
+            -> AuthError.EmailAlreadyRegistered
+
+            AuthErrorCode.WeakPassword -> AuthError.WeakPassword
+            AuthErrorCode.OtpExpired, AuthErrorCode.OtpDisabled -> AuthError.InvalidCode
             else -> AuthError.Unknown
         }
 
@@ -451,11 +461,17 @@ internal fun Throwable.toAuthError(): AuthError {
 }
 ```
 
-If `AuthRestException` or its `errorCode` property does not resolve, open the class from the
-resolved artifact (in Android Studio: Navigate → Class → `AuthRestException`) and use whatever
-accessor it exposes. Do not guess a name; if it exposes no code at all, fall back to
-`message?.lowercase()?.contains("invalid login credentials")`-style matching and note the change
-in a comment.
+Verified against auth-kt 3.1.4: `AuthRestException` is at that import, `errorCode` is a nullable
+`AuthErrorCode`, and all six constants above exist (of roughly seventy). If one does not resolve,
+the release renamed it — find the current name in the artifact rather than guessing.
+
+**Also add tests for these six branches.** `AuthRestException(errorCode: String,
+errorDescription: String, response: HttpResponse)` is public, `HttpResponse` has only abstract
+accessors so `mockk<HttpResponse>(relaxed = true)` satisfies it, and `mockk` is already on this
+module's test classpath — no live server needed. The constructor resolves the enum through
+`AuthErrorCode.Companion.fromValue()` against **snake_case wire values**, so read the real values
+out of the artifact instead of assuming them. Cover each mapped code, one real-but-unmapped code,
+and one unrecognised string — the last two pin the `else` branch.
 
 - [ ] **Step 6: Run the tests to verify they pass**
 
