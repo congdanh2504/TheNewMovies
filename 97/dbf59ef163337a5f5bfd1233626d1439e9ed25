@@ -1,0 +1,24 @@
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/SupabaseAuthRepository.kt
+  s_5373a0f018b70a::t_7cc8c53bd305ab 1-15,48,50
+  s_5373a0f018b70a::t_98c8cdde4fc2fd 16-47,49,51-99
+core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt
+  s_5373a0f018b70a::t_73db4d3764b2a9 48-51
+  s_5373a0f018b70a::t_57d33b7b0fb0d2 18,22
+  s_5373a0f018b70a::t_11ad956d8bfd65 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "97dbf59ef163337a5f5bfd1233626d1439e9ed25",
+  "prompts": {},
+  "sessions": {
+    "s_5373a0f018b70a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "333f2903-e9e3-4aa7-b03b-8a4eaceebfdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
