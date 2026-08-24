@@ -15,7 +15,6 @@
  */
 package com.practice.thenewmovies.feature.auth.impl
 
-import androidx.lifecycle.SavedStateHandle
 import com.practice.thenewmovies.core.model.AuthError
 import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.repository.TestAuthRepository
@@ -105,7 +104,7 @@ class RecoveryViewModelTest {
     }
 
     private fun resetViewModel(email: String = "user@example.com") = ResetPasswordViewModel(
-        savedStateHandle = SavedStateHandle(mapOf("email" to email)),
+        email = email,
         authRepository = authRepository,
     )
 }

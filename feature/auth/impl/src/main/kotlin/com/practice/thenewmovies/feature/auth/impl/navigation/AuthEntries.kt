@@ -45,7 +45,7 @@ fun EntryProviderScope<NavKey>.authEntries(
             onCodeSent = { email -> onNavigate(ResetPasswordNavKey(email)) },
         )
     }
-    entry<ResetPasswordNavKey> {
-        ResetPasswordScreen(onBackClick = onBack)
+    entry<ResetPasswordNavKey> { key ->
+        ResetPasswordScreen(email = key.email, onBackClick = onBack)
     }
 }
