@@ -44,9 +44,13 @@ import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 
 @Composable
 internal fun ResetPasswordScreen(
+    email: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ResetPasswordViewModel = hiltViewModel(),
+    viewModel: ResetPasswordViewModel =
+        hiltViewModel<ResetPasswordViewModel, ResetPasswordViewModel.Factory>(
+            creationCallback = { factory -> factory.create(email) },
+        ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

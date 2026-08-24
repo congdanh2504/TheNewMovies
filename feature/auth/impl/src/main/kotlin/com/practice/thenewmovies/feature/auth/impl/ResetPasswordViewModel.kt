@@ -15,19 +15,20 @@
  */
 package com.practice.thenewmovies.feature.auth.impl
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.thenewmovies.core.data.repository.AuthRepository
 import com.practice.thenewmovies.core.model.AuthError
 import com.practice.thenewmovies.core.model.AuthResult
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 internal data class ResetPasswordUiState(
     val code: String = "",
@@ -38,14 +39,15 @@ internal data class ResetPasswordUiState(
     val isSubmitting: Boolean = false,
 )
 
-@HiltViewModel
-internal class ResetPasswordViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = ResetPasswordViewModel.Factory::class)
+internal class ResetPasswordViewModel @AssistedInject constructor(
+    @Assisted private val email: String,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    private val email: String = requireNotNull(savedStateHandle["email"]) {
-        "ResetPasswordViewModel needs an email in its SavedStateHandle"
+    @AssistedFactory
+    interface Factory {
+        fun create(email: String): ResetPasswordViewModel
     }
 
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
