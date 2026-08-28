@@ -23,6 +23,7 @@ kotlinxSerializationJson = "1.11.0"
 coroutines = "1.11.0"
 timber = "5.0.1"
 javaxInject = "1"
+m3Adaptive = "1.2.0"
 benchmark = "1.4.1"
 profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
@@ -104,6 +105,9 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 # Test
 junit = { module = "junit:junit", version.ref = "junit" }
+androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "m3Adaptive" }
+androidx-compose-material3-adaptive-navigation3 = { module = "androidx.compose.material3.adaptive:adaptive-navigation3", version.ref = "m3Adaptive" }
+androidx-compose-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
 androidx-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmark" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
