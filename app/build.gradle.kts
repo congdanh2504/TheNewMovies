@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.themovies.android.compose)
     alias(libs.plugins.themovies.android.hilt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.androidx.baselineprofile)
 }
 
 android {
@@ -46,12 +47,19 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
+    // Applies the packaged baseline profile on first run for devices that do not get it from
+    // the Play install. Without this the profile ships but is never installed.
+    implementation(libs.androidx.profileinstaller)
+
+    baselineProfile(projects.benchmark)
 
     testImplementation(projects.core.testing)
     testImplementation(libs.junit)

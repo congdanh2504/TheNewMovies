@@ -47,6 +47,7 @@ core:data:watchlist ──> core:{database, supabase, model} + core:data:auth
 - **`core:data:watchlist`** — `WatchlistRepository`, write-through cache and Postgrest sync
 - **`core:domain`** — `GetMovieDetailUseCase`, the one place several repositories are combined
 - **`core:ui`** — composites shared by two or more features
+- **`benchmark`** — macrobenchmark + baseline profile generator (`com.android.test`)
 - **`core:testing`** — fakes and the main-dispatcher rule
 - **`feature:<name>:api`** — one `NavKey` plus a navigate extension
 - **`feature:<name>:impl`** — ViewModel, screen, entry function

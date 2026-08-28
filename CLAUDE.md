@@ -25,6 +25,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # instrumented (needs a device/emulator): Room DAO tests + Compose UI tests
 ./gradlew connectedDebugAndroidTest
 ./gradlew :core:database:connectedDebugAndroidTest
+
+# performance (needs a device/emulator)
+./gradlew :app:generateBaselineProfile             # refresh app/src/release/generated/baselineProfiles
+./gradlew :benchmark:connectedBenchmarkAndroidTest # cold start, with and without the profile
 ```
 
 Spotless enforces a license header (`spotless/copyright.*`) on every `.kt`, `.kts`, and `.xml`.
@@ -100,6 +104,21 @@ plugin and declare dependencies — nothing else. A dependency every feature nee
   `@param:PrimaryKey` compiles fine but makes Room report *"An entity must have at least 1 property
   annotated with @PrimaryKey"*. Verify a change here against generated output, not just a green
   build.
+- **Dependency versions are pinned at the AGP 8 ceiling, not at latest.** Compose BOM 2026.08.00,
+  `androidx.core` 1.19.0, lifecycle 2.11.0, `hilt-navigation-compose` 1.4.0 and
+  `material3.adaptive` 1.3.0 all publish AAR metadata requiring **AGP 9.1+**, and Hilt 2.59+
+  refuses to apply below AGP 9.0. Kotlin cannot move alone either: Hilt 2.58 is the last release
+  that both reads Kotlin 2.3 metadata and tolerates AGP 8. Bumping any one of these without AGP 9
+  fails the build; do not "just update" the catalog.
+- **AGP 8.10's R8 cannot parse Kotlin 2.3 metadata** and says so, repeatedly, during
+  `assembleRelease`. The warnings are currently harmless -- the minified build was installed and
+  verified to launch, and all eight Moshi codegen adapters survive shrinking -- but they are a
+  standing reason to move to AGP 9. `KotlinJsonAdapterFactory` does appear as a string in the DEX;
+  that is Moshi core's error message, not the class, and `moshi-kotlin` is not a dependency.
+- **`./gradlew build` must stay device-free.** The baseline-profile plugin wires on-device
+  collection into `:benchmark:assemble`, which the root `build` reaches; unguarded, that made a
+  plain build take 11 minutes and fail with no device attached. `benchmark/build.gradle.kts`
+  disables the connected and collect tasks unless the invocation names one.
 - **Networks that block TMDB** (DNS to `127.0.0.1` plus TLS reset on the SNI host) look exactly
   like an app bug. Check `dig api.themoviedb.org` first; `image.tmdb.org` is usually not blocked,
   so posters can load while the API cannot.

@@ -18,21 +18,20 @@ package com.practice.thenewmovies.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -101,7 +99,7 @@ private fun SignedInApp(onSignOut: () -> Unit) {
     }
 
     val backStack = navigator.state.backStack
-    val showBottomBar = backStack.last() in navigator.state.topLevelKeys
+    val showNavigation = backStack.last() in navigator.state.topLevelKeys
 
     // NavDisplay only dispatches back when its own stack has more than one entry, so at a tab
     // root it lets back fall through and finish the activity. Handle exactly that case here:
@@ -113,27 +111,62 @@ private fun SignedInApp(onSignOut: () -> Unit) {
         navigator.goBack()
     }
 
-    Scaffold(
-        bottomBar = {
-            if (showBottomBar) {
-                MoviesBottomBar(
-                    currentTopLevelKey = navigator.state.currentTopLevelKey,
-                    onItemClick = navigator::navigate,
+    // NavigationSuiteScaffold picks the navigation container from the window size: a bottom bar
+    // on a phone, a rail on a tablet or an unfolded foldable. The state hides it on Detail, which
+    // is what the old `showBottomBar` branch did.
+    // Item colours are read here, not inside navigationSuiteItems: that lambda is a plain
+    // builder scope, not a @Composable one, so MaterialTheme is unreadable from inside it.
+    val itemColors = NavigationSuiteItemColors(
+        navigationBarItemColors = NavigationBarItemDefaults.colors(
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.secondary,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
+            unselectedTextColor = MaterialTheme.colorScheme.secondary,
+            indicatorColor = Color.Transparent,
+        ),
+        navigationRailItemColors = NavigationRailItemDefaults.colors(
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.secondary,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
+            unselectedTextColor = MaterialTheme.colorScheme.secondary,
+            indicatorColor = Color.Transparent,
+        ),
+        navigationDrawerItemColors = NavigationDrawerItemDefaults.colors(),
+    )
+    val navigationState = rememberNavigationSuiteScaffoldState()
+    LaunchedEffect(showNavigation) {
+        if (showNavigation) navigationState.show() else navigationState.hide()
+    }
+
+    NavigationSuiteScaffold(
+        state = navigationState,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            navigationBarContainerColor = MaterialTheme.colorScheme.surface,
+            navigationRailContainerColor = MaterialTheme.colorScheme.surface,
+        ),
+        navigationSuiteItems = {
+            TopLevelNavItem.entries.forEach { navItem ->
+                item(
+                    modifier = Modifier.testTag("nav_${navItem.name.lowercase()}"),
+                    selected = navItem.key == navigator.state.currentTopLevelKey,
+                    onClick = { navigator.navigate(navItem.key) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(navItem.icon),
+                            contentDescription = navItem.label,
+                        )
+                    },
+                    label = { Text(navItem.label) },
+                    colors = itemColors,
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.surface,
-        // Zero content insets: screens handle their own system-bar padding, so Detail can draw
-        // its backdrop behind the status bar. Padding the whole NavDisplay would box every
-        // screen inside the system bars and make edge-to-edge impossible.
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-    ) { innerPadding ->
+    ) {
         NavDisplay(
             backStack = backStack,
             onBack = { navigator.goBack() },
-            // Only the bottom inset is shared: it is the bottom bar's height, and it is zero
-            // on screens that hide the bar.
-            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator(),
@@ -145,45 +178,5 @@ private fun SignedInApp(onSignOut: () -> Unit) {
                 detailEntry(navigator)
             },
         )
-    }
-}
-
-@Composable
-private fun MoviesBottomBar(
-    currentTopLevelKey: NavKey,
-    onItemClick: (NavKey) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(MaterialTheme.colorScheme.primary),
-        )
-        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-            TopLevelNavItem.entries.forEach { item ->
-                val selected = item.key == currentTopLevelKey
-                NavigationBarItem(
-                    modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
-                    icon = {
-                        Icon(
-                            painter = painterResource(item.icon),
-                            contentDescription = item.label,
-                        )
-                    },
-                    label = { Text(item.label) },
-                    selected = selected,
-                    onClick = { onItemClick(item.key) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.secondary,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                        unselectedTextColor = MaterialTheme.colorScheme.secondary,
-                        indicatorColor = Color.Transparent,
-                    ),
-                )
-            }
-        }
     }
 }

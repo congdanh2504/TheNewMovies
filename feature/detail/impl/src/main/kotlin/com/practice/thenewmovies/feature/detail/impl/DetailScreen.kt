@@ -74,7 +74,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.practice.thenewmovies.core.designsystem.theme.MoviesTheme
 import com.practice.thenewmovies.core.model.Cast
 import com.practice.thenewmovies.core.model.Genre
