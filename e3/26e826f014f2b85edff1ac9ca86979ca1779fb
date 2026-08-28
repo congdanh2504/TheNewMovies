@@ -1,0 +1,21 @@
+app/src/main/AndroidManifest.xml
+  s_41b1375cbca37c::t_205183918e96ee 28
+  s_41b1375cbca37c::t_0e74ea34594354 21-24
+  s_41b1375cbca37c::t_c55f6ee412e7a0 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "e326e826f014f2b85edff1ac9ca86979ca1779fb",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": null
+    }
+  }
+}
