@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,11 +56,8 @@ import com.practice.thenewmovies.core.model.SessionState
 import com.practice.thenewmovies.core.navigation.NavigationState
 import com.practice.thenewmovies.core.navigation.Navigator
 import com.practice.thenewmovies.feature.detail.impl.navigation.detailEntry
-import com.practice.thenewmovies.feature.home.api.HomeNavKey
 import com.practice.thenewmovies.feature.home.impl.navigation.homeEntry
-import com.practice.thenewmovies.feature.search.api.SearchNavKey
 import com.practice.thenewmovies.feature.search.impl.navigation.searchEntry
-import com.practice.thenewmovies.feature.watchlist.api.WatchlistNavKey
 import com.practice.thenewmovies.feature.watchlist.impl.navigation.watchlistEntry
 import com.practice.thenewmovies.navigation.TopLevelNavItem
 
@@ -88,22 +86,18 @@ private fun LoadingScreen(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SignedInApp(onSignOut: () -> Unit) {
-    val homeStack = rememberNavBackStack(HomeNavKey)
-    val searchStack = rememberNavBackStack(SearchNavKey)
-    val watchlistStack = rememberNavBackStack(WatchlistNavKey)
     val currentIndex = rememberSaveable { mutableIntStateOf(0) }
 
+    // TopLevelNavItem is the single source of tab identity and order: the bottom bar renders it
+    // and the back stacks are derived from it. Declaring the stacks separately let the two lists
+    // drift, and a bar item with no matching sub-stack crashes NavigationState.goToTopLevel.
+    val subStacks = linkedMapOf<NavKey, MutableList<NavKey>>()
+    TopLevelNavItem.entries.forEach { item ->
+        subStacks[item.key] = key(item) { rememberNavBackStack(item.key) }
+    }
+
     val navigator = remember {
-        Navigator(
-            NavigationState(
-                subStacks = linkedMapOf<NavKey, MutableList<NavKey>>(
-                    HomeNavKey to homeStack,
-                    SearchNavKey to searchStack,
-                    WatchlistNavKey to watchlistStack,
-                ),
-                currentIndex = currentIndex,
-            ),
-        )
+        Navigator(NavigationState(subStacks = subStacks, currentIndex = currentIndex))
     }
 
     val backStack = navigator.state.backStack
