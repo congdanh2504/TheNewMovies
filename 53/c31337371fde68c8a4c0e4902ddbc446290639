@@ -1,0 +1,22 @@
+gradle/libs.versions.toml
+  s_41b1375cbca37c::t_f00e7d98c4b413 3-4,22-23,30-31
+  s_41b1375cbca37c::t_1416a11183e6f4 6,17,21
+  s_41b1375cbca37c::t_c432af5247852d 5
+  s_41b1375cbca37c::t_a1bdf3abd988db 7,12-13,16,19-20,27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "53c31337371fde68c8a4c0e4902ddbc446290639",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
