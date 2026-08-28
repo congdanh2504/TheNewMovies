@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.detail.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
+import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import com.practice.thenewmovies.core.data.util.NetworkMonitor
 import com.practice.thenewmovies.core.domain.GetMovieDetailUseCase
@@ -42,7 +42,7 @@ private const val LOAD_FAILED_MESSAGE = "Could not load this movie"
 internal class DetailViewModel @AssistedInject constructor(
     @Assisted private val movieId: Int,
     getMovieDetail: GetMovieDetailUseCase,
-    private val moviesRepository: MoviesRepository,
+    private val moviesRepository: MovieDetailRepository,
     private val watchlistRepository: WatchlistRepository,
     networkMonitor: NetworkMonitor,
 ) : ViewModel() {

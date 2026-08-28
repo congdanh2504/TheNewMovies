@@ -15,14 +15,14 @@
  */
 package com.practice.thenewmovies.core.domain
 
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
+import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class GetMovieDetailUseCase @Inject constructor(
-    private val moviesRepository: MoviesRepository,
+    private val moviesRepository: MovieDetailRepository,
     private val watchlistRepository: WatchlistRepository,
 ) {
     operator fun invoke(movieId: Int): Flow<MovieDetailWithExtras> = combine(

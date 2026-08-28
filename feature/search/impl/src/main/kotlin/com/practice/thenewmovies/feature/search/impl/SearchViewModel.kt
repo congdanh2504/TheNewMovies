@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
+import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
 import com.practice.thenewmovies.core.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -38,7 +38,7 @@ private const val QUERY_DEBOUNCE_MS = 500L
 @OptIn(FlowPreview::class)
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
-    moviesRepository: MoviesRepository,
+    moviesRepository: MovieSearchRepository,
 ) : ViewModel() {
 
     private val _query = MutableStateFlow("")
