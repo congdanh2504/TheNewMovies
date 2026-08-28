@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.testing.repository
+package com.practice.thenewmovies.core.data.movies
 
-import androidx.paging.PagingData
-import com.practice.thenewmovies.core.data.movies.MovieSearchRepository
 import com.practice.thenewmovies.core.model.Movie
+import com.practice.thenewmovies.core.model.MovieCategory
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-class TestMovieSearchRepository : MovieSearchRepository {
+/**
+ * Category listings. Reads come from local storage, so every screen works offline; [refresh] is
+ * the only network access and no-ops inside the sync TTL.
+ */
+interface MovieListRepository {
 
-    override fun searchMoviesPaged(query: String): Flow<PagingData<Movie>> =
-        flowOf(PagingData.empty())
+    fun getMovies(category: MovieCategory): Flow<List<Movie>>
+
+    /** Returns false when the network call failed; cached data is still readable. */
+    suspend fun refresh(category: MovieCategory): Boolean
 }

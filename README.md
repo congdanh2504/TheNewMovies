@@ -23,11 +23,14 @@ rating made offline is written locally at once and pushed when a session next be
 ```
 app ──> feature:*:impl ──> feature:*:api ──> core:navigation
              │
-             ├──> core:{data, domain, ui, designsystem, model, common}
+             ├──> core:data:<domain> (only the domains that feature uses)
+             ├──> core:{domain, ui, designsystem, model, common, connectivity}
              │
-app ──> core:data (for AuthRepository, to gate on the session)
+app ──> core:data:{auth, watchlist} (to gate on the session and sync on sign-in)
 
-core:data ──> core:{network, database, datastore, supabase, model, common}
+core:data:movies    ──> core:{network, database, model, common}
+core:data:auth      ──> core:{supabase, model, common}
+core:data:watchlist ──> core:{database, supabase, model} + core:data:auth
 ```
 
 - **`core:model`** — pure-Kotlin domain models
@@ -38,7 +41,10 @@ core:data ──> core:{network, database, datastore, supabase, model, common}
 - **`core:supabase`** — the `SupabaseClient` and its Hilt module, nothing else
 - **`core:database`** — Room entities, DAOs, and entity-to-model mapping
 - **`core:datastore`** — the selected home tab
-- **`core:data`** — repository interfaces, `internal` implementations, mapping
+- **`core:connectivity`** — `NetworkMonitor` and its `ConnectivityManager` implementation
+- **`core:data:movies`** — the three movie repositories, offline-first implementation, search paging
+- **`core:data:auth`** — `AuthRepository`, its Supabase implementation, session/error mapping
+- **`core:data:watchlist`** — `WatchlistRepository`, write-through cache and Postgrest sync
 - **`core:domain`** — `GetMovieDetailUseCase`, the one place several repositories are combined
 - **`core:ui`** — composites shared by two or more features
 - **`core:testing`** — fakes and the main-dispatcher rule
@@ -46,8 +52,11 @@ core:data ──> core:{network, database, datastore, supabase, model, common}
 - **`feature:<name>:impl`** — ViewModel, screen, entry function
 
 A feature reaches another feature only through its `api` module, so features compile in parallel
-and `:app` is the only module that knows the whole graph. `core:data` is the only module that sees
-a Supabase type — nothing under `feature/` or `app/` imports `io.github.jan.supabase`.
+and `:app` is the only module that knows the whole graph. `core:data` itself holds no code: it is
+the container for the three domain modules, and a feature depends on the domains it names and no
+others — editing auth does not recompile the watchlist feature. Only `core:data:auth` and
+`core:data:watchlist` see a Supabase type; nothing under `feature/` or `app/` imports
+`io.github.jan.supabase`.
 
 ### Data flow
 

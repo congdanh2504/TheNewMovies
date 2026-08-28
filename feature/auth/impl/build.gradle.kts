@@ -7,7 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
     implementation(projects.core.data.auth)
     implementation(projects.feature.auth.api)
 

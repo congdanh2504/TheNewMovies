@@ -8,7 +8,7 @@ android {
 
 dependencies {
     api(projects.core.connectivity)
-    api(projects.core.data)
+    api(projects.core.data.movies)
     api(projects.core.data.auth)
     api(projects.core.data.watchlist)
     api(projects.core.datastore)

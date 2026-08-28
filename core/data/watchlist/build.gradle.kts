@@ -1,9 +1,6 @@
 plugins {
-    // `id`, not `alias`: :core:data still has sources and applies these plugins itself, so a
-    // nested project cannot re-resolve them by version. Reverts to `alias` in the task that
-    // empties :core:data.
-    id("themovies.android.library")
-    id("themovies.android.hilt")
+    alias(libs.plugins.themovies.android.library)
+    alias(libs.plugins.themovies.android.hilt)
     alias(libs.plugins.kotlin.serialization)
 }
 

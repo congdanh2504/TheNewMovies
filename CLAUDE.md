@@ -19,8 +19,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # one module / one class / one method
 ./gradlew :feature:home:impl:testDebugUnitTest
-./gradlew :core:data:testDebugUnitTest --tests '*OfflineFirstMoviesRepositoryTest'
-./gradlew :core:data:testDebugUnitTest --tests '*OfflineFirstMoviesRepositoryTest.refresh skips the network while the cache is fresh'
+./gradlew :core:data:movies:testDebugUnitTest --tests '*OfflineFirstMoviesRepositoryTest'
+./gradlew :core:data:movies:testDebugUnitTest --tests '*OfflineFirstMoviesRepositoryTest.refresh skips the network while the cache is fresh'
 
 # instrumented (needs a device/emulator): Room DAO tests + Compose UI tests
 ./gradlew connectedDebugAndroidTest
@@ -51,6 +51,10 @@ Read `README.md` for the module map and data flow. What matters when editing:
   dispatches back only when its own stack has >1 entry, so `:app` adds a `BackHandler` for the
   tab-root case. Test `Navigator` directly, but remember unit tests can't catch app-level
   wiring gaps like that one.
+- **`core:data` is split by domain** (`movies`, `auth`, `watchlist`) and holds no sources itself —
+  it is only the container project, so it has no `build.gradle.kts` and no `include` line. A
+  feature depends on the domains it names and no others; `core:connectivity` holds `NetworkMonitor`.
+  Adding a repository means picking a domain module, not growing a shared one.
 - **Thin domain layer.** `core:domain` holds `GetMovieDetailUseCase` only — the one place several
   repositories combine. Do not add pass-through use cases; ViewModels call repositories.
 

@@ -13,16 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.testing.repository
+package com.practice.thenewmovies.core.data.movies
 
-import androidx.paging.PagingData
-import com.practice.thenewmovies.core.data.movies.MovieSearchRepository
-import com.practice.thenewmovies.core.model.Movie
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-
-class TestMovieSearchRepository : MovieSearchRepository {
-
-    override fun searchMoviesPaged(query: String): Flow<PagingData<Movie>> =
-        flowOf(PagingData.empty())
+/** Wall-clock time, injected so TTL logic is testable. */
+fun interface Clock {
+    fun nowMillis(): Long
 }

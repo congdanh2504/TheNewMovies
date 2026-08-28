@@ -18,7 +18,7 @@ package com.practice.thenewmovies.feature.detail.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.thenewmovies.core.connectivity.NetworkMonitor
-import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
+import com.practice.thenewmovies.core.data.movies.MovieDetailRepository
 import com.practice.thenewmovies.core.data.watchlist.WatchlistRepository
 import com.practice.thenewmovies.core.domain.GetMovieDetailUseCase
 import com.practice.thenewmovies.core.model.MovieDetail

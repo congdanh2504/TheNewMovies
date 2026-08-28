@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.testing.repository
+package com.practice.thenewmovies.core.data.movies
 
-import androidx.paging.PagingData
-import com.practice.thenewmovies.core.data.movies.MovieSearchRepository
 import com.practice.thenewmovies.core.model.Movie
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import com.practice.thenewmovies.core.network.model.NetworkMovie
 
-class TestMovieSearchRepository : MovieSearchRepository {
-
-    override fun searchMoviesPaged(query: String): Flow<PagingData<Movie>> =
-        flowOf(PagingData.empty())
-}
+fun NetworkMovie.asExternalModel() = Movie(
+    id = id,
+    title = title,
+    overview = overview,
+    posterPath = posterPath.asImageUrl(),
+    backdropPath = backdropPath.asImageUrl(),
+    releaseDate = releaseDate,
+    voteAverage = voteAverage,
+    voteCount = voteCount,
+)
