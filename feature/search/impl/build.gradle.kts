@@ -7,7 +7,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
+    implementation(projects.core.data.movies)
     implementation(projects.feature.search.api)
     implementation(projects.feature.detail.api)
 

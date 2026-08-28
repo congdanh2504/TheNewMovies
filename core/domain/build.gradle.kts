@@ -8,7 +8,8 @@ android {
 }
 
 dependencies {
-    api(projects.core.data)
+    api(projects.core.data.movies)
+    api(projects.core.data.watchlist)
     api(projects.core.model)
 
     implementation(libs.kotlinx.coroutines.core)

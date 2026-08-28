@@ -17,8 +17,8 @@ package com.practice.thenewmovies.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.AuthRepository
-import com.practice.thenewmovies.core.data.repository.WatchlistRepository
+import com.practice.thenewmovies.core.data.auth.AuthRepository
+import com.practice.thenewmovies.core.data.watchlist.WatchlistRepository
 import com.practice.thenewmovies.core.model.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

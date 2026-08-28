@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
+import com.practice.thenewmovies.core.data.movies.MovieSearchRepository
 import com.practice.thenewmovies.core.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview

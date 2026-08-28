@@ -15,8 +15,8 @@
  */
 package com.practice.thenewmovies.core.domain
 
-import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
-import com.practice.thenewmovies.core.data.repository.WatchlistRepository
+import com.practice.thenewmovies.core.data.movies.MovieDetailRepository
+import com.practice.thenewmovies.core.data.watchlist.WatchlistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject

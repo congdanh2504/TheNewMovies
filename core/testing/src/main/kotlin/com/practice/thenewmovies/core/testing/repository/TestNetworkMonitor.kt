@@ -15,7 +15,7 @@
  */
 package com.practice.thenewmovies.core.testing.repository
 
-import com.practice.thenewmovies.core.data.util.NetworkMonitor
+import com.practice.thenewmovies.core.connectivity.NetworkMonitor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 

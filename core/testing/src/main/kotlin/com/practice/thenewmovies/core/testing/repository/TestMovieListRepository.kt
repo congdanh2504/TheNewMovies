@@ -15,7 +15,7 @@
  */
 package com.practice.thenewmovies.core.testing.repository
 
-import com.practice.thenewmovies.core.data.repository.MovieListRepository
+import com.practice.thenewmovies.core.data.movies.MovieListRepository
 import com.practice.thenewmovies.core.model.Movie
 import com.practice.thenewmovies.core.model.MovieCategory
 import kotlinx.coroutines.flow.Flow

@@ -15,7 +15,7 @@
  */
 package com.practice.thenewmovies.core.testing.repository
 
-import com.practice.thenewmovies.core.data.repository.AuthRepository
+import com.practice.thenewmovies.core.data.auth.AuthRepository
 import com.practice.thenewmovies.core.model.AuthError
 import com.practice.thenewmovies.core.model.AuthResult
 import com.practice.thenewmovies.core.model.AuthUser

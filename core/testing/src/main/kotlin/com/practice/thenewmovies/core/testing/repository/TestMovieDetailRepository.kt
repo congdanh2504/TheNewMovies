@@ -15,7 +15,7 @@
  */
 package com.practice.thenewmovies.core.testing.repository
 
-import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
+import com.practice.thenewmovies.core.data.movies.MovieDetailRepository
 import com.practice.thenewmovies.core.model.Cast
 import com.practice.thenewmovies.core.model.MovieDetail
 import com.practice.thenewmovies.core.model.Review

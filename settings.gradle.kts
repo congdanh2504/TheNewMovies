@@ -35,7 +35,10 @@ rootProject.name = "TheNewMovies"
 
 include(":app")
 include(":core:common")
-include(":core:data")
+include(":core:connectivity")
+include(":core:data:auth")
+include(":core:data:movies")
+include(":core:data:watchlist")
 include(":core:database")
 include(":core:datastore")
 include(":core:designsystem")

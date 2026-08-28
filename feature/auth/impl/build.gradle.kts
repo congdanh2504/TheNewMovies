@@ -7,7 +7,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
+    implementation(projects.core.data.auth)
     implementation(projects.feature.auth.api)
 
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)

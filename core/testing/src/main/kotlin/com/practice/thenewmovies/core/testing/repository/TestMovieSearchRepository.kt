@@ -16,7 +16,7 @@
 package com.practice.thenewmovies.core.testing.repository
 
 import androidx.paging.PagingData
-import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
+import com.practice.thenewmovies.core.data.movies.MovieSearchRepository
 import com.practice.thenewmovies.core.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
