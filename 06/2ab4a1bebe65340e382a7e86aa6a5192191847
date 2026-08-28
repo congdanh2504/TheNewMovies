@@ -1,0 +1,38 @@
+benchmark/src/main/AndroidManifest.xml
+  s_41b1375cbca37c::t_69a8e183778f91 1-5
+benchmark/src/main/kotlin/com/practice/thenewmovies/benchmark/BaselineProfileGenerator.kt
+  s_41b1375cbca37c::t_5ff212a3c4f7db 1-27
+benchmark/build.gradle.kts
+  s_41b1375cbca37c::t_f9b54a5939246d 37-38,41-45
+  s_41b1375cbca37c::t_e1632ce5c34c6c 2-5
+  s_41b1375cbca37c::t_69a8e183778f91 1,6-28,46-51
+  s_41b1375cbca37c::t_55aa7e5e94e670 29-31,34-36
+  s_41b1375cbca37c::t_76cc83f8e442d8 39-40
+  s_41b1375cbca37c::t_830f6da0f8db5d 32-33
+app/src/release/generated/baselineProfiles/baseline-prof.txt
+  s_41b1375cbca37c::t_576aba789fd987 1-20900
+settings.gradle.kts
+  s_41b1375cbca37c::t_69a8e183778f91 37
+gradle/libs.versions.toml
+  s_41b1375cbca37c::t_cf32d98652d47f 26-28,107-109,133
+app/build.gradle.kts
+  s_41b1375cbca37c::t_5ff212a3c4f7db 6,56-60
+benchmark/src/main/kotlin/com/practice/thenewmovies/benchmark/StartupBenchmark.kt
+  s_41b1375cbca37c::t_5ff212a3c4f7db 1-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "062ab4a1bebe65340e382a7e86aa6a5192191847",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
