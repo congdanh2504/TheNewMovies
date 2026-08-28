@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.search.impl
 
 import app.cash.turbine.test
 import com.practice.thenewmovies.core.testing.MainDispatcherRule
-import com.practice.thenewmovies.core.testing.repository.TestMoviesRepository
+import com.practice.thenewmovies.core.testing.repository.TestMovieSearchRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -28,7 +28,7 @@ class SearchViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val moviesRepository = TestMoviesRepository()
+    private val moviesRepository = TestMovieSearchRepository()
 
     private fun viewModel() = SearchViewModel(moviesRepository)
 

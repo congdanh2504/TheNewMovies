@@ -17,7 +17,9 @@ package com.practice.thenewmovies.core.data.di
 
 import com.practice.thenewmovies.core.data.repository.AuthRepository
 import com.practice.thenewmovies.core.data.repository.DefaultWatchlistRepository
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
+import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
+import com.practice.thenewmovies.core.data.repository.MovieListRepository
+import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
 import com.practice.thenewmovies.core.data.repository.OfflineFirstMoviesRepository
 import com.practice.thenewmovies.core.data.repository.SupabaseAuthRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
@@ -35,9 +37,19 @@ import dagger.hilt.components.SingletonComponent
 internal abstract class DataModule {
 
     @Binds
-    internal abstract fun bindsMoviesRepository(
+    internal abstract fun bindsMovieListRepository(
         repository: OfflineFirstMoviesRepository,
-    ): MoviesRepository
+    ): MovieListRepository
+
+    @Binds
+    internal abstract fun bindsMovieDetailRepository(
+        repository: OfflineFirstMoviesRepository,
+    ): MovieDetailRepository
+
+    @Binds
+    internal abstract fun bindsMovieSearchRepository(
+        repository: OfflineFirstMoviesRepository,
+    ): MovieSearchRepository
 
     @Binds
     internal abstract fun bindsWatchlistRepository(

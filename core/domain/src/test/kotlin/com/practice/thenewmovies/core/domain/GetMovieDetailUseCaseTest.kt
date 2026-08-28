@@ -19,7 +19,7 @@ import com.practice.thenewmovies.core.testing.data.testCast
 import com.practice.thenewmovies.core.testing.data.testMovieDetail
 import com.practice.thenewmovies.core.testing.data.testReviews
 import com.practice.thenewmovies.core.testing.data.testWatchlistMovie
-import com.practice.thenewmovies.core.testing.repository.TestMoviesRepository
+import com.practice.thenewmovies.core.testing.repository.TestMovieDetailRepository
 import com.practice.thenewmovies.core.testing.repository.TestWatchlistRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -31,7 +31,7 @@ import org.junit.Test
 
 class GetMovieDetailUseCaseTest {
 
-    private val moviesRepository = TestMoviesRepository()
+    private val moviesRepository = TestMovieDetailRepository()
     private val watchlistRepository = TestWatchlistRepository()
     private val useCase = GetMovieDetailUseCase(moviesRepository, watchlistRepository)
 

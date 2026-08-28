@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.home.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
+import com.practice.thenewmovies.core.data.repository.MovieListRepository
 import com.practice.thenewmovies.core.data.util.NetworkMonitor
 import com.practice.thenewmovies.core.datastore.UserPreferencesRepository
 import com.practice.thenewmovies.core.model.MovieCategory
@@ -36,7 +36,7 @@ private const val LOAD_FAILED_MESSAGE = "Couldn't load movies. Check your connec
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val moviesRepository: MoviesRepository,
+    private val moviesRepository: MovieListRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     networkMonitor: NetworkMonitor,
 ) : ViewModel() {
