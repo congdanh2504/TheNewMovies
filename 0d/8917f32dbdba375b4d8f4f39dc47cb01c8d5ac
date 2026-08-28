@@ -1,0 +1,20 @@
+app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt
+  s_41b1375cbca37c::t_2ac54d81ebf250 91-98,100
+  s_41b1375cbca37c::t_b4152cbada44bd 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "0d8917f32dbdba375b4d8f4f39dc47cb01c8d5ac",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
