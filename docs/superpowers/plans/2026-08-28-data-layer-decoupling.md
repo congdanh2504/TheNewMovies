@@ -14,7 +14,9 @@
 
 **Part A is ready to execute now.** It is ~10 files, three green commits, and it pays off the moment a fifth movies method is added.
 
-**Part B is trigger-gated. Do not execute it yet.** `:core:data` is 990 lines of main source across 3 domains. Splitting a 990-line module into four is not yet worth the Gradle configuration cost. Execute Part B when *either* trigger fires:
+**Part B was executed on 2026-08-28 at the user's direction, ahead of its triggers.** The gate below is kept for the record.
+
+**Part B was trigger-gated:** `:core:data` is 990 lines of main source across 3 domains. Splitting a 990-line module into four is not yet worth the Gradle configuration cost. Execute Part B when *either* trigger fires:
 
 - a fourth domain repository lands in `:core:data` (e.g. profile, recommendations, offline downloads), **or**
 - a `./gradlew :feature:<x>:impl:compileDebugKotlin` on a warm daemon takes more than ~20s because it waits on `:core:data`.
@@ -597,7 +599,7 @@ Tasks B1–B4 each move one domain out and repoint its consumers in the same com
 - Modify: `core/testing/build.gradle.kts`, `core/testing/src/main/kotlin/com/practice/thenewmovies/core/testing/repository/TestNetworkMonitor.kt`
 - Modify: `feature/home/impl/build.gradle.kts`, `feature/detail/impl/build.gradle.kts`
 
-- [ ] **Step 1: Move the files and rewrite their packages**
+- [x] **Step 1: Move the files and rewrite their packages**
 
 ```bash
 mkdir -p core/connectivity/src/main/kotlin/com/practice/thenewmovies/core/connectivity/di
@@ -616,7 +618,7 @@ monitor. `:core:data` is left with no manifest, which is fine: AGP generates one
 module that does not declare anything. `:app` declares the same permission independently, so a
 missed move would not show up at runtime — only the library's self-containment would quietly rot.
 
-- [ ] **Step 2: Create `core/connectivity/build.gradle.kts`**
+- [x] **Step 2: Create `core/connectivity/build.gradle.kts`**
 
 ```kotlin
 plugins {
@@ -633,7 +635,7 @@ dependencies {
 }
 ```
 
-- [ ] **Step 3: Create `ConnectivityModule.kt` with the binding moved out of `DataModule`**
+- [x] **Step 3: Create `ConnectivityModule.kt` with the binding moved out of `DataModule`**
 
 ```kotlin
 package com.practice.thenewmovies.core.connectivity.di
@@ -660,7 +662,7 @@ Then delete `bindsNetworkMonitor` and its two `NetworkMonitor`/`ConnectivityMana
 
 `ConnectivityManagerNetworkMonitor` is `internal`; it must stay `internal` and now lives in the same module as its `@Binds`, so no visibility change is needed.
 
-- [ ] **Step 4: Register the module in `settings.gradle.kts`**
+- [x] **Step 4: Register the module in `settings.gradle.kts`**
 
 Add in alphabetical position, after `include(":core:common")`:
 
@@ -668,7 +670,7 @@ Add in alphabetical position, after `include(":core:common")`:
 include(":core:connectivity")
 ```
 
-- [ ] **Step 5: Repoint consumers**
+- [x] **Step 5: Repoint consumers**
 
 In `core/testing/build.gradle.kts` add `api(projects.core.connectivity)`.
 
@@ -686,7 +688,7 @@ grep -rl "core\.data\.util\.NetworkMonitor" app core feature --include="*.kt" \
   | xargs sed -i '' 's/core\.data\.util\.NetworkMonitor/core.connectivity.NetworkMonitor/'
 ```
 
-- [ ] **Step 6: Verify**
+- [x] **Step 6: Verify**
 
 ```bash
 ./gradlew spotlessApply
@@ -695,7 +697,7 @@ grep -rl "core\.data\.util\.NetworkMonitor" app core feature --include="*.kt" \
 
 Expected: `BUILD SUCCESSFUL`. A `MissingBinding ... NetworkMonitor` at `:app` means Step 3 dropped the binding without adding the new module to the graph — check that `:core:connectivity` is reachable from `:app` (it is, transitively through the two features).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -713,7 +715,7 @@ git commit -m "refactor: extract :core:connectivity from :core:data"
 - Modify: `settings.gradle.kts`, `core/data/build.gradle.kts`, `core/data/.../di/DataModule.kt`
 - Modify: `core/testing/build.gradle.kts`, `app/build.gradle.kts`, `feature/auth/impl/build.gradle.kts`
 
-- [ ] **Step 1: Move the sources and tests**
+- [x] **Step 1: Move the sources and tests**
 
 ```bash
 mkdir -p core/data/auth/src/main/kotlin/com/practice/thenewmovies/core/data/auth/di
@@ -727,7 +729,7 @@ git mv $T/AuthErrorMappingTest.kt $T/SessionStateMappingTest.kt $NT/
 sed -i '' 's/^package com\.practice\.thenewmovies\.core\.data\.repository$/package com.practice.thenewmovies.core.data.auth/' $N/*.kt $NT/*.kt
 ```
 
-- [ ] **Step 2: Create `core/data/auth/build.gradle.kts`**
+- [x] **Step 2: Create `core/data/auth/build.gradle.kts`**
 
 ```kotlin
 plugins {
@@ -750,7 +752,7 @@ dependencies {
 
 `testImplementation(projects.core.testing)` alongside `:core:testing`'s `api` on this module is not a cycle and is exactly what `core/data/build.gradle.kts` does today: only `compileTestKotlin` reaches `:core:testing`, and `:core:testing`'s main source set reaches back to this module's main jar — the task graph stays acyclic.
 
-- [ ] **Step 3: Create `AuthDataModule.kt`**
+- [x] **Step 3: Create `AuthDataModule.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.data.auth.di
@@ -775,7 +777,7 @@ internal abstract class AuthDataModule {
 
 Delete `bindsAuthRepository` and its two imports from `core/data/.../di/DataModule.kt`.
 
-- [ ] **Step 4: Register and repoint**
+- [x] **Step 4: Register and repoint**
 
 `settings.gradle.kts` — add after `include(":core:data")`:
 
@@ -805,7 +807,7 @@ grep -rn "core\.data\.repository\." app core feature --include="*.kt" | grep -v 
 
 Expected: no output.
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 ```bash
 ./gradlew spotlessApply
@@ -827,7 +829,7 @@ Expected: `BUILD SUCCESSFUL`. `SupabaseAuthRepository` and the mapping functions
 - Modify: `settings.gradle.kts`, `core/data/build.gradle.kts`, `core/data/.../di/DataModule.kt`
 - Modify: `core/testing/build.gradle.kts`, `core/domain/build.gradle.kts`, `app/build.gradle.kts`, `feature/watchlist/impl/build.gradle.kts`, `feature/detail/impl/build.gradle.kts`
 
-- [ ] **Step 1: Move the sources and tests**
+- [x] **Step 1: Move the sources and tests**
 
 ```bash
 mkdir -p core/data/watchlist/src/main/kotlin/com/practice/thenewmovies/core/data/watchlist/di
@@ -844,7 +846,7 @@ sed -i '' -E 's/^package com\.practice\.thenewmovies\.core\.data\.(repository|re
 
 `DefaultWatchlistRepository` currently imports `...core.data.remote.WatchlistRemoteDataSource`, `...asEntity` and `...asRow`; all three now share its package, so delete those three import lines. Same for the two moved tests.
 
-- [ ] **Step 2: Create `core/data/watchlist/build.gradle.kts`**
+- [x] **Step 2: Create `core/data/watchlist/build.gradle.kts`**
 
 ```kotlin
 plugins {
@@ -873,7 +875,7 @@ dependencies {
 
 `DefaultWatchlistRepositoryTest` constructs `TestAuthRepository` from `:core:testing`, so the `testImplementation(projects.core.testing)` above is load-bearing, not boilerplate. See the note in Task B2 Step 2 for why it is not a cycle.
 
-- [ ] **Step 3: Create `WatchlistDataModule.kt`**
+- [x] **Step 3: Create `WatchlistDataModule.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.data.watchlist.di
@@ -898,7 +900,7 @@ internal abstract class WatchlistDataModule {
 
 Delete `bindsWatchlistRepository` and its two imports from `core/data/.../di/DataModule.kt`.
 
-- [ ] **Step 4: Register and repoint**
+- [x] **Step 4: Register and repoint**
 
 `settings.gradle.kts`:
 
@@ -916,7 +918,7 @@ grep -rl "core\.data\.repository\.WatchlistRepository" app core feature --includ
   | xargs sed -i '' 's/core\.data\.repository\.WatchlistRepository/core.data.watchlist.WatchlistRepository/'
 ```
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 ```bash
 ./gradlew spotlessApply
@@ -938,7 +940,7 @@ What is left in `:core:data` after B1–B3 is exactly the movies domain: the thr
 - Modify: `settings.gradle.kts`, and every consumer build file
 - Modify: `README.md`, `CLAUDE.md`
 
-- [ ] **Step 1: Move everything remaining**
+- [x] **Step 1: Move everything remaining**
 
 ```bash
 mkdir -p core/data/movies/src/main/kotlin/com/practice/thenewmovies/core/data/movies/di
@@ -963,7 +965,7 @@ git rm -r core/data/src
 
 Rename the class inside `MoviesDataModule.kt` from `DataModule` to `MoviesDataModule` (Kotlin requires no filename/class match, but the mismatch is confusing), and delete its now-same-package imports for `MovieListRepository`, `MovieDetailRepository`, `MovieSearchRepository`, `OfflineFirstMoviesRepository`. `ClockModule` stays in the same file.
 
-- [ ] **Step 2: Create `core/data/movies/build.gradle.kts`**
+- [x] **Step 2: Create `core/data/movies/build.gradle.kts`**
 
 ```kotlin
 plugins {
@@ -992,7 +994,7 @@ dependencies {
 
 This is `core/data/build.gradle.kts` as it stands today, minus `kotlin.serialization` and `:core:supabase`. `kotlin.serialization` is dropped because the movies DTOs use Moshi codegen in `:core:network`; it was only there for `WatchlistRow`, which left in B3.
 
-- [ ] **Step 3: Delete `:core:data` and register the new module**
+- [x] **Step 3: Delete `:core:data` and register the new module**
 
 ```bash
 git rm core/data/build.gradle.kts
@@ -1000,7 +1002,7 @@ git rm core/data/build.gradle.kts
 
 In `settings.gradle.kts`, delete `include(":core:data")` and add `include(":core:data:movies")`. Gradle creates the `:core:data` container project implicitly from its children — an explicit include with no build file would fail configuration.
 
-- [ ] **Step 4: Repoint every remaining consumer**
+- [x] **Step 4: Repoint every remaining consumer**
 
 ```bash
 grep -rn "projects\.core\.data\b" --include="*.kts" . | grep -v "/build/"
@@ -1016,7 +1018,7 @@ grep -rl "core\.data\.\(repository\|model\|paging\|util\)\." app core feature --
   | xargs sed -i '' -E 's/core\.data\.(repository|model|paging|util)\./core.data.movies./g'
 ```
 
-- [ ] **Step 5: Confirm no reference to the old module or packages survives**
+- [x] **Step 5: Confirm no reference to the old module or packages survives**
 
 ```bash
 grep -rn "projects\.core\.data\b" --include="*.kts" . | grep -v "/build/"
@@ -1025,7 +1027,7 @@ grep -rn "core\.data\.\(repository\|remote\|paging\|util\)\." app core feature -
 
 Expected: no output from either.
 
-- [ ] **Step 6: Full build, including instrumented-test compilation**
+- [x] **Step 6: Full build, including instrumented-test compilation**
 
 ```bash
 ./gradlew spotlessApply
@@ -1035,7 +1037,7 @@ Expected: no output from either.
 
 Expected: `BUILD SUCCESSFUL` from all three. The third catches androidTest sources, which `build` does not compile.
 
-- [ ] **Step 7: Update the docs**
+- [x] **Step 7: Update the docs**
 
 In `README.md`, replace `core:data` in the module map with the four modules and their one-line responsibilities from the "Target module graph" table above.
 
@@ -1047,7 +1049,7 @@ In `CLAUDE.md`, under **Architecture**, replace the `:core:data` mentions in the
   `NetworkMonitor`. Adding a repository means picking a domain module, not growing a shared one.
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add -A
@@ -1058,11 +1060,11 @@ git commit -m "refactor: rename the remainder of :core:data to :core:data:movies
 
 ## Part B completion check
 
-- [ ] `./gradlew build` and `./gradlew compileDebugAndroidTestSources` both pass.
-- [ ] `grep -rn "projects.core.data\b" --include="*.kts" .` returns nothing.
-- [ ] `feature/watchlist/impl/build.gradle.kts` names `projects.core.data.watchlist` and no other data module.
-- [ ] Touching `core/data/auth` and running `./gradlew :feature:watchlist:impl:compileDebugKotlin` reports the task `UP-TO-DATE` — this is the whole point of Part B, so verify it explicitly.
-- [ ] `README.md` and `CLAUDE.md` describe the new module map.
+- [x] `./gradlew build` and `./gradlew compileDebugAndroidTestSources` both pass.
+- [x] `grep -rn "projects.core.data\b" --include="*.kts" .` returns nothing.
+- [x] `feature/watchlist/impl/build.gradle.kts` names `projects.core.data.watchlist` and no other data module.
+- [x] Touching `core/data/auth` and running `./gradlew :feature:watchlist:impl:compileDebugKotlin` reports the task `UP-TO-DATE` — this is the whole point of Part B, so verify it explicitly.
+- [x] `README.md` and `CLAUDE.md` describe the new module map.
 
 ---
 
@@ -1072,3 +1074,28 @@ git commit -m "refactor: rename the remainder of :core:data to :core:data:movies
 - **A green `assembleRelease` proves nothing** for the Moshi codegen path (`CLAUDE.md`). Neither part touches DTOs or R8 rules, but if `:core:network` is edited in passing, install and run a release build before believing it.
 - **`sed -i ''` is BSD/macOS syntax.** On Linux use `sed -i` with no argument.
 - **`internal` visibility follows the module, not the package.** Anything `internal` that ends up in a different module from its only caller becomes a compile error naming the exact symbol — promote it to `public` in the same task, do not duplicate it.
+
+---
+
+## Execution notes (2026-08-28)
+
+Four things the plan did not predict, all found by the build:
+
+1. **A nested project cannot `alias()` a plugin its parent applies.** While `:core:data` still had
+   sources, `:core:data:auth` and `:core:data:watchlist` failed with "the plugin is already on the
+   classpath with an unknown version". They used `id("themovies.android.library")` until B4 emptied
+   the parent, then reverted to `alias`.
+2. **`:core:data:auth` needs `:core:common`.** `SupabaseAuthRepository` injects
+   `@Dispatcher(MoviesDispatchers.IO)`; the dependency table in Part B omitted it.
+3. **Same-package references have no imports to rewrite.** `DefaultWatchlistRepository` referenced
+   `AuthRepository` with no import because they shared a package; the sed-based rewrites could not
+   see it, and KSP caught it as `error.NonExistentClass`. The same bit `MoviesDataModule`, whose
+   `di` subpackage is *not* the package its types moved to.
+4. **Test deps are not all transitive.** `:core:data:auth` needed an explicit `libs.mockk`.
+
+Also: a stale Gradle daemon produced "Cannot lock execution history cache ... already been locked
+by this process" mid-run. `./gradlew --stop` cleared it; it was not a project-structure problem.
+
+Verification beyond `./gradlew build`: 19 test classes / 106 unit tests before and after, none
+silently dropped, and an ABI change in `:core:data:auth` leaves `:feature:watchlist:impl`
+up-to-date.
