@@ -24,7 +24,7 @@ import com.practice.thenewmovies.feature.watchlist.api.WatchlistNavKey
 
 enum class TopLevelNavItem(
     val key: NavKey,
-    @DrawableRes val icon: Int,
+    @param:DrawableRes val icon: Int,
     val label: String,
 ) {
     Home(HomeNavKey, R.drawable.ic_home, "Home"),

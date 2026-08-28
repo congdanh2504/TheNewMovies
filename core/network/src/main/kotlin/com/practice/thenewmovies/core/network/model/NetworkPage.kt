@@ -20,8 +20,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class NetworkPage<T>(
-    @Json(name = "page") val page: Int,
-    @Json(name = "results") val results: List<T>,
-    @Json(name = "total_pages") val totalPages: Int,
-    @Json(name = "total_results") val totalResults: Int,
+    @param:Json(name = "page") val page: Int,
+    @param:Json(name = "results") val results: List<T>,
+    @param:Json(name = "total_pages") val totalPages: Int,
+    @param:Json(name = "total_results") val totalResults: Int,
 )

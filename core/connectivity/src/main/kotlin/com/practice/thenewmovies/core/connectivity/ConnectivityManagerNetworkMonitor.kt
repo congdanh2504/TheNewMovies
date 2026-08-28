@@ -31,7 +31,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class ConnectivityManagerNetworkMonitor @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
 ) : NetworkMonitor {
 
     override val isOnline: Flow<Boolean> = callbackFlow {

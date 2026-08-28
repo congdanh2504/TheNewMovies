@@ -40,7 +40,7 @@ private const val LOAD_FAILED_MESSAGE = "Could not load this movie"
 
 @HiltViewModel(assistedFactory = DetailViewModel.Factory::class)
 internal class DetailViewModel @AssistedInject constructor(
-    @Assisted private val movieId: Int,
+    @param:Assisted private val movieId: Int,
     getMovieDetail: GetMovieDetailUseCase,
     private val moviesRepository: MovieDetailRepository,
     private val watchlistRepository: WatchlistRepository,
