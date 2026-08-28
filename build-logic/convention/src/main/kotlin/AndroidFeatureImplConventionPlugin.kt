@@ -26,6 +26,7 @@ class AndroidFeatureImplConventionPlugin : Plugin<Project> {
             implementation(libs["androidx.hilt.navigation.compose"])
             implementation(libs["androidx.navigation3.runtime"])
             implementation(libs["coil.compose"])
+            implementation(libs["coil.network.okhttp"])
 
             testImplementation(project(":core:testing"))
         }

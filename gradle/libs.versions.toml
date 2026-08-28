@@ -8,7 +8,7 @@ room = "2.8.4"
 retrofit = "2.11.0"
 moshi = "1.15.2"
 okhttp = "4.12.0"
-coilCompose = "2.7.0"
+coilCompose = "3.4.0"
 paging = "3.5.1"
 datastore = "1.2.1"
 supabase = "3.1.4"
@@ -95,7 +95,8 @@ supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 # Misc
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 # Test
