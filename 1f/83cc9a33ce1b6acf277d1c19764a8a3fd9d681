@@ -1,0 +1,19 @@
+docs/superpowers/plans/2026-08-28-data-layer-decoupling.md
+  s_41b1375cbca37c::t_344a85d2eafea1 17-19,602,621,638,665,673,691,700,718,732,755,780,810,832,849,878,903,921,943,968,997,1005,1021,1030,1040,1052,1063-1067,1077-1101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "1f83cc9a33ce1b6acf277d1c19764a8a3fd9d681",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
