@@ -77,7 +77,7 @@ Every new `.kt` file fails `spotlessCheck` until the license header is inserted,
 - Modify: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/MoviesRepository.kt`
 - Modify: `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt:35-38`
 
-- [ ] **Step 1: Create `MovieListRepository.kt`**
+- [x] **Step 1: Create `MovieListRepository.kt`**
 
 Write the file with this body (Spotless adds the license header in Step 5):
 
@@ -101,7 +101,7 @@ interface MovieListRepository {
 }
 ```
 
-- [ ] **Step 2: Create `MovieDetailRepository.kt`**
+- [x] **Step 2: Create `MovieDetailRepository.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.data.repository
@@ -128,7 +128,7 @@ interface MovieDetailRepository {
 }
 ```
 
-- [ ] **Step 3: Create `MovieSearchRepository.kt`**
+- [x] **Step 3: Create `MovieSearchRepository.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.data.repository
@@ -144,7 +144,7 @@ interface MovieSearchRepository {
 }
 ```
 
-- [ ] **Step 4: Replace the body of `MoviesRepository.kt` with the union**
+- [x] **Step 4: Replace the body of `MoviesRepository.kt` with the union**
 
 Keep the license header already in the file; replace everything from `package` down with:
 
@@ -163,7 +163,7 @@ interface MoviesRepository :
 
 `OfflineFirstMoviesRepository` needs no edit in this task: it still declares `: MoviesRepository`, which now transitively implements all three, and its seven `override` members satisfy them.
 
-- [ ] **Step 5: Add the three bindings to `DataModule.kt`**
+- [x] **Step 5: Add the three bindings to `DataModule.kt`**
 
 Insert after the existing `bindsMoviesRepository` function (`core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt:35-38`), and add the three imports alongside the existing `MoviesRepository` import:
 
@@ -192,7 +192,7 @@ import com.practice.thenewmovies.core.data.repository.MovieListRepository
 import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
 ```
 
-- [ ] **Step 6: Format and verify the whole graph builds**
+- [x] **Step 6: Format and verify the whole graph builds**
 
 Hilt binding errors surface only at `:app`, never at `:core:data`, so `:app:compileDebugKotlin` is the real check.
 
@@ -203,7 +203,7 @@ Hilt binding errors surface only at `:app`, never at `:core:data`, so `:app:comp
 
 Expected: `BUILD SUCCESSFUL`. A `MissingBinding` or `DuplicateBindings` failure here means Step 5 is wrong — fix before continuing.
 
-- [ ] **Step 7: Run the full unit test suite**
+- [x] **Step 7: Run the full unit test suite**
 
 ```bash
 ./gradlew testDebugUnitTest
@@ -211,7 +211,7 @@ Expected: `BUILD SUCCESSFUL`. A `MissingBinding` or `DuplicateBindings` failure 
 
 Expected: `BUILD SUCCESSFUL`. No test file changed in this task, so any failure is a real regression.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository core/data/src/main/kotlin/com/practice/thenewmovies/core/data/di/DataModule.kt
@@ -230,7 +230,7 @@ Each consumer swaps `MoviesRepository` for the one interface it uses. `TestMovie
 - Modify: `feature/search/impl/src/main/kotlin/com/practice/thenewmovies/feature/search/impl/SearchViewModel.kt:22,41`
 - Modify: `feature/detail/impl/src/main/kotlin/com/practice/thenewmovies/feature/detail/impl/DetailViewModel.kt:20,45`
 
-- [ ] **Step 1: Narrow `GetMovieDetailUseCase`**
+- [x] **Step 1: Narrow `GetMovieDetailUseCase`**
 
 Change the import and the constructor parameter type. The parameter name stays `moviesRepository` so no call site moves.
 
@@ -245,7 +245,7 @@ class GetMovieDetailUseCase @Inject constructor(
 ) {
 ```
 
-- [ ] **Step 2: Narrow `HomeViewModel`**
+- [x] **Step 2: Narrow `HomeViewModel`**
 
 ```kotlin
 import com.practice.thenewmovies.core.data.repository.MovieListRepository
@@ -259,7 +259,7 @@ internal class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 ```
 
-- [ ] **Step 3: Narrow `SearchViewModel`**
+- [x] **Step 3: Narrow `SearchViewModel`**
 
 ```kotlin
 import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
@@ -271,7 +271,7 @@ internal class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 ```
 
-- [ ] **Step 4: Narrow `DetailViewModel`**
+- [x] **Step 4: Narrow `DetailViewModel`**
 
 `DetailViewModel` reads detail data through `GetMovieDetailUseCase` and touches the repository only for `refreshDetail`.
 
@@ -289,7 +289,7 @@ internal class DetailViewModel @AssistedInject constructor(
 ) : ViewModel() {
 ```
 
-- [ ] **Step 5: Verify build and tests**
+- [x] **Step 5: Verify build and tests**
 
 ```bash
 ./gradlew spotlessApply
@@ -298,7 +298,7 @@ internal class DetailViewModel @AssistedInject constructor(
 
 Expected: `BUILD SUCCESSFUL`. No test file changed; `TestMoviesRepository` is still a subtype of all three narrowed parameter types.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add core/domain feature/home/impl feature/search/impl feature/detail/impl
@@ -323,7 +323,7 @@ git commit -m "refactor: inject the narrowed movie repositories into each consum
 
 Note: `TestMoviesRepository.emitSearchResults` has no caller anywhere in the repo — it is dropped rather than carried into `TestMovieSearchRepository`. Add it back the day a search test needs it.
 
-- [ ] **Step 1: Create `TestMovieListRepository.kt`**
+- [x] **Step 1: Create `TestMovieListRepository.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.testing.repository
@@ -357,7 +357,7 @@ class TestMovieListRepository : MovieListRepository {
 }
 ```
 
-- [ ] **Step 2: Create `TestMovieDetailRepository.kt`**
+- [x] **Step 2: Create `TestMovieDetailRepository.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.testing.repository
@@ -404,7 +404,7 @@ class TestMovieDetailRepository : MovieDetailRepository {
 }
 ```
 
-- [ ] **Step 3: Create `TestMovieSearchRepository.kt`**
+- [x] **Step 3: Create `TestMovieSearchRepository.kt`**
 
 ```kotlin
 package com.practice.thenewmovies.core.testing.repository
@@ -422,7 +422,7 @@ class TestMovieSearchRepository : MovieSearchRepository {
 }
 ```
 
-- [ ] **Step 4: Repoint the four test files**
+- [x] **Step 4: Repoint the four test files**
 
 `feature/home/impl/.../HomeViewModelTest.kt` — change the import and the field. All existing assertions (`emitMovies`, `refreshedCategories`, `refreshSucceeds`) exist on the new fake unchanged.
 
@@ -460,7 +460,7 @@ import com.practice.thenewmovies.core.testing.repository.TestMovieDetailReposito
     private val moviesRepository = TestMovieDetailRepository()
 ```
 
-- [ ] **Step 5: Delete the union interface, its fake, and its binding**
+- [x] **Step 5: Delete the union interface, its fake, and its binding**
 
 ```bash
 git rm core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/MoviesRepository.kt
@@ -475,7 +475,7 @@ In `core/data/src/main/kotlin/com/practice/thenewmovies/core/data/repository/Off
 ) : MovieListRepository, MovieDetailRepository, MovieSearchRepository {
 ```
 
-- [ ] **Step 6: Confirm nothing still names the deleted types**
+- [x] **Step 6: Confirm nothing still names the deleted types**
 
 ```bash
 grep -rn "MoviesRepository" app core feature --include="*.kt" | grep -v "/build/" | grep -v OfflineFirstMoviesRepository
@@ -483,7 +483,7 @@ grep -rn "MoviesRepository" app core feature --include="*.kt" | grep -v "/build/
 
 Expected: no output. (`OfflineFirstMoviesRepository` and `OfflineFirstMoviesRepositoryTest` keep their names — the impl class is not being renamed.)
 
-- [ ] **Step 7: Full build**
+- [x] **Step 7: Full build**
 
 ```bash
 ./gradlew spotlessApply
@@ -492,7 +492,7 @@ Expected: no output. (`OfflineFirstMoviesRepository` and `OfflineFirstMoviesRepo
 
 Expected: `BUILD SUCCESSFUL`. This runs assemble + all unit tests + `spotlessCheck` + lint.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add -A core/data core/testing core/domain feature
@@ -503,9 +503,9 @@ git commit -m "refactor(testing): split TestMoviesRepository and drop the union 
 
 ## Part A completion check
 
-- [ ] `./gradlew build` passes.
-- [ ] `grep -rn "interface MoviesRepository" core` returns nothing.
-- [ ] `SearchViewModelTest` compiles against a fake with exactly one method.
+- [x] `./gradlew build` passes.
+- [x] `grep -rn "interface MoviesRepository" core` returns nothing.
+- [x] `SearchViewModelTest` compiles against a fake with exactly one method.
 
 ---
 
