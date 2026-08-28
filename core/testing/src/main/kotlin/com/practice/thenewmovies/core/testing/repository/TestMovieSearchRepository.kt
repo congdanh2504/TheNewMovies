@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.data.repository
+package com.practice.thenewmovies.core.testing.repository
 
-/**
- * Transitional union of the three movie repositories, kept only so consumers can be narrowed one
- * at a time. Deleted in Task A3 -- do not add methods here.
- */
-interface MoviesRepository :
-    MovieListRepository,
-    MovieDetailRepository,
-    MovieSearchRepository
+import androidx.paging.PagingData
+import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
+import com.practice.thenewmovies.core.model.Movie
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+
+class TestMovieSearchRepository : MovieSearchRepository {
+
+    override fun searchMoviesPaged(query: String): Flow<PagingData<Movie>> =
+        flowOf(PagingData.empty())
+}

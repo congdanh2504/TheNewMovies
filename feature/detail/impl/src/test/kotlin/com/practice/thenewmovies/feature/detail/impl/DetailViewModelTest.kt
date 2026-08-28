@@ -20,7 +20,7 @@ import com.practice.thenewmovies.core.domain.GetMovieDetailUseCase
 import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.data.testCast
 import com.practice.thenewmovies.core.testing.data.testMovieDetail
-import com.practice.thenewmovies.core.testing.repository.TestMoviesRepository
+import com.practice.thenewmovies.core.testing.repository.TestMovieDetailRepository
 import com.practice.thenewmovies.core.testing.repository.TestNetworkMonitor
 import com.practice.thenewmovies.core.testing.repository.TestWatchlistRepository
 import kotlinx.coroutines.flow.first
@@ -36,7 +36,7 @@ class DetailViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val moviesRepository = TestMoviesRepository()
+    private val moviesRepository = TestMovieDetailRepository()
     private val watchlistRepository = TestWatchlistRepository()
     private val networkMonitor = TestNetworkMonitor()
 

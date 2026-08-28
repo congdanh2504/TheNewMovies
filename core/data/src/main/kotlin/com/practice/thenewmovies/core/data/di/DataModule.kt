@@ -20,7 +20,6 @@ import com.practice.thenewmovies.core.data.repository.DefaultWatchlistRepository
 import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
 import com.practice.thenewmovies.core.data.repository.MovieListRepository
 import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
-import com.practice.thenewmovies.core.data.repository.MoviesRepository
 import com.practice.thenewmovies.core.data.repository.OfflineFirstMoviesRepository
 import com.practice.thenewmovies.core.data.repository.SupabaseAuthRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
@@ -36,11 +35,6 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class DataModule {
-
-    @Binds
-    internal abstract fun bindsMoviesRepository(
-        repository: OfflineFirstMoviesRepository,
-    ): MoviesRepository
 
     @Binds
     internal abstract fun bindsMovieListRepository(

@@ -19,7 +19,7 @@ import app.cash.turbine.test
 import com.practice.thenewmovies.core.model.MovieCategory
 import com.practice.thenewmovies.core.testing.MainDispatcherRule
 import com.practice.thenewmovies.core.testing.data.testMovies
-import com.practice.thenewmovies.core.testing.repository.TestMoviesRepository
+import com.practice.thenewmovies.core.testing.repository.TestMovieListRepository
 import com.practice.thenewmovies.core.testing.repository.TestNetworkMonitor
 import com.practice.thenewmovies.core.testing.repository.TestUserPreferencesRepository
 import kotlinx.coroutines.test.runTest
@@ -33,7 +33,7 @@ class HomeViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val moviesRepository = TestMoviesRepository()
+    private val moviesRepository = TestMovieListRepository()
     private val networkMonitor = TestNetworkMonitor()
     private val userPreferences = TestUserPreferencesRepository()
 
