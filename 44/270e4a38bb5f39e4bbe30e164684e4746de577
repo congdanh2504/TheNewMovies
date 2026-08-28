@@ -1,0 +1,25 @@
+core/domain/src/main/kotlin/com/practice/thenewmovies/core/domain/GetMovieDetailUseCase.kt
+  s_41b1375cbca37c::t_b5b809d33e9682 18,25
+feature/search/impl/src/main/kotlin/com/practice/thenewmovies/feature/search/impl/SearchViewModel.kt
+  s_41b1375cbca37c::t_b5b809d33e9682 22,41
+feature/detail/impl/src/main/kotlin/com/practice/thenewmovies/feature/detail/impl/DetailViewModel.kt
+  s_41b1375cbca37c::t_b5b809d33e9682 20,45
+feature/home/impl/src/main/kotlin/com/practice/thenewmovies/feature/home/impl/HomeViewModel.kt
+  s_41b1375cbca37c::t_b5b809d33e9682 20,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "44270e4a38bb5f39e4bbe30e164684e4746de577",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
