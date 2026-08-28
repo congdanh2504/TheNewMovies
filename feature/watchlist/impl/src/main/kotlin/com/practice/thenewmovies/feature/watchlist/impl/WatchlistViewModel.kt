@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.watchlist.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.WatchlistRepository
+import com.practice.thenewmovies.core.data.watchlist.WatchlistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

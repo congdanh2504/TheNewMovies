@@ -15,12 +15,10 @@
  */
 package com.practice.thenewmovies.core.data.di
 
-import com.practice.thenewmovies.core.data.repository.DefaultWatchlistRepository
 import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
 import com.practice.thenewmovies.core.data.repository.MovieListRepository
 import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
 import com.practice.thenewmovies.core.data.repository.OfflineFirstMoviesRepository
-import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import com.practice.thenewmovies.core.data.util.Clock
 import dagger.Binds
 import dagger.Module
@@ -46,11 +44,6 @@ internal abstract class DataModule {
     internal abstract fun bindsMovieSearchRepository(
         repository: OfflineFirstMoviesRepository,
     ): MovieSearchRepository
-
-    @Binds
-    internal abstract fun bindsWatchlistRepository(
-        repository: DefaultWatchlistRepository,
-    ): WatchlistRepository
 }
 
 @Module

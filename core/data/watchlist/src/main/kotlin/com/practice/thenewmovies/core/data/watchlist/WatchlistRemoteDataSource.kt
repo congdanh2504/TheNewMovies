@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.data.remote
+package com.practice.thenewmovies.core.data.watchlist
 
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from

@@ -15,7 +15,7 @@
  */
 package com.practice.thenewmovies.core.testing.repository
 
-import com.practice.thenewmovies.core.data.repository.WatchlistRepository
+import com.practice.thenewmovies.core.data.watchlist.WatchlistRepository
 import com.practice.thenewmovies.core.model.WatchlistMovie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.data.repository
+package com.practice.thenewmovies.core.data.watchlist
 
-import com.practice.thenewmovies.core.data.remote.WatchlistRemoteDataSource
-import com.practice.thenewmovies.core.data.remote.asRow
 import com.practice.thenewmovies.core.database.dao.WatchlistDao
 import com.practice.thenewmovies.core.database.entity.WatchlistEntity
 import com.practice.thenewmovies.core.model.WatchlistMovie

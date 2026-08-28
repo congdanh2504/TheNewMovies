@@ -8,6 +8,7 @@ android {
 
 dependencies {
     implementation(projects.core.data)
+    implementation(projects.core.data.watchlist)
     implementation(projects.feature.watchlist.api)
     implementation(projects.feature.detail.api)
 }
