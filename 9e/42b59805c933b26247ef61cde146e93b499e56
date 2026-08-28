@@ -1,0 +1,25 @@
+app/build.gradle.kts
+  s_41b1375cbca37c::t_484fedec791d02 50-51
+app/src/main/kotlin/com/practice/thenewmovies/ui/MoviesApp.kt
+  s_41b1375cbca37c::t_ff7f0dfb384c4a 117-135,162
+  s_41b1375cbca37c::t_d77074ea83b0a4 26-27,29-32,34,102,114-116,136-161,166
+gradle/libs.versions.toml
+  s_41b1375cbca37c::t_484fedec791d02 108-110
+  s_41b1375cbca37c::t_1fc2aa78f8b8bb 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "9e42b59805c933b26247ef61cde146e93b499e56",
+  "prompts": {},
+  "sessions": {
+    "s_41b1375cbca37c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "72b5df79-dfb7-4332-ba48-e7bcb8b24b04",
+        "model": "claude-opus-5"
+      },
+      "human_author": "danhtruong254 <danhtruong@everfit.io>"
+    }
+  }
+}
