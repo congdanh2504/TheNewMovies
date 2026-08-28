@@ -49,7 +49,7 @@ internal class OfflineFirstMoviesRepository @Inject constructor(
     private val castDao: CastDao,
     private val reviewDao: ReviewDao,
     private val clock: Clock,
-    @Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : MovieListRepository, MovieDetailRepository, MovieSearchRepository {
 
     override fun getMovies(category: MovieCategory): Flow<List<Movie>> =

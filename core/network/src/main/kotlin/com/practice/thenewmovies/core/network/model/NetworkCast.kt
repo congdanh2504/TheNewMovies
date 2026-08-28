@@ -20,14 +20,14 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class NetworkCast(
-    @Json(name = "cast_id") val castId: Int,
-    @Json(name = "character") val character: String,
-    @Json(name = "name") val name: String,
-    @Json(name = "profile_path") val profilePath: String?,
+    @param:Json(name = "cast_id") val castId: Int,
+    @param:Json(name = "character") val character: String,
+    @param:Json(name = "name") val name: String,
+    @param:Json(name = "profile_path") val profilePath: String?,
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkCastResponse(
-    @Json(name = "id") val id: Int,
-    @Json(name = "cast") val cast: List<NetworkCast>,
+    @param:Json(name = "id") val id: Int,
+    @param:Json(name = "cast") val cast: List<NetworkCast>,
 )

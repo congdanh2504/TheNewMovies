@@ -41,7 +41,7 @@ internal data class ResetPasswordUiState(
 
 @HiltViewModel(assistedFactory = ResetPasswordViewModel.Factory::class)
 internal class ResetPasswordViewModel @AssistedInject constructor(
-    @Assisted private val email: String,
+    @param:Assisted private val email: String,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 

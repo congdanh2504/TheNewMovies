@@ -20,14 +20,14 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class NetworkReview(
-    @Json(name = "author") val author: String,
-    @Json(name = "content") val content: String,
-    @Json(name = "created_at") val createdAt: String,
-    @Json(name = "author_details") val authorDetails: NetworkAuthorDetails? = null,
+    @param:Json(name = "author") val author: String,
+    @param:Json(name = "content") val content: String,
+    @param:Json(name = "created_at") val createdAt: String,
+    @param:Json(name = "author_details") val authorDetails: NetworkAuthorDetails? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkAuthorDetails(
-    @Json(name = "avatar_path") val avatarPath: String? = null,
-    @Json(name = "rating") val rating: Float? = null,
+    @param:Json(name = "avatar_path") val avatarPath: String? = null,
+    @param:Json(name = "rating") val rating: Float? = null,
 )

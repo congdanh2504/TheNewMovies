@@ -92,6 +92,14 @@ plugin and declare dependencies — nothing else. A dependency every feature nee
 - **Edge-to-edge is app-wide.** The Scaffold in `MoviesApp` uses zeroed `contentWindowInsets`, so
   each screen root applies its own `statusBarsPadding()`. A new screen without it draws under the
   status bar.
+- **Annotations on constructor properties carry an explicit `@param:`.** Kotlin 2.4 changes the
+  default from "param only" to "param and property", which is what the IDE's *"annotation is only
+  applied to the parameter"* warning is about. `@Json`, `@Dispatcher`, `@ApplicationContext`,
+  `@Assisted` and `@DrawableRes` are pinned with `@param:`. `@SerialName` and `@PrimaryKey` are
+  **not** — they have no `value parameter` target: `@param:SerialName` fails to compile, and
+  `@param:PrimaryKey` compiles fine but makes Room report *"An entity must have at least 1 property
+  annotated with @PrimaryKey"*. Verify a change here against generated output, not just a green
+  build.
 - **Networks that block TMDB** (DNS to `127.0.0.1` plus TLS reset on the SNI host) look exactly
   like an app bug. Check `dig api.themoviedb.org` first; `image.tmdb.org` is usually not blocked,
   so posters can load while the API cannot.

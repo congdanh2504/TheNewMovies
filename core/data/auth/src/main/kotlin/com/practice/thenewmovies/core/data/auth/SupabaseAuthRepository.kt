@@ -33,7 +33,7 @@ import javax.inject.Singleton
 @Singleton
 internal class SupabaseAuthRepository @Inject constructor(
     private val client: SupabaseClient,
-    @Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(MoviesDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
 
     // runningFold emits its initial value first, so a fresh collector sees Loading immediately

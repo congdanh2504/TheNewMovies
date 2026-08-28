@@ -20,24 +20,24 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class NetworkMovieDetail(
-    @Json(name = "id") val id: Int,
-    @Json(name = "title") val title: String,
-    @Json(name = "original_title") val originalTitle: String,
-    @Json(name = "original_language") val originalLanguage: String,
-    @Json(name = "overview") val overview: String?,
-    @Json(name = "genres") val genres: List<NetworkGenre>,
-    @Json(name = "poster_path") val posterPath: String?,
-    @Json(name = "backdrop_path") val backdropPath: String?,
-    @Json(name = "release_date") val releaseDate: String,
-    @Json(name = "runtime") val runtime: Long?,
-    @Json(name = "status") val status: String,
-    @Json(name = "video") val video: Boolean,
-    @Json(name = "vote_average") val voteAverage: Double,
-    @Json(name = "vote_count") val voteCount: Int,
+    @param:Json(name = "id") val id: Int,
+    @param:Json(name = "title") val title: String,
+    @param:Json(name = "original_title") val originalTitle: String,
+    @param:Json(name = "original_language") val originalLanguage: String,
+    @param:Json(name = "overview") val overview: String?,
+    @param:Json(name = "genres") val genres: List<NetworkGenre>,
+    @param:Json(name = "poster_path") val posterPath: String?,
+    @param:Json(name = "backdrop_path") val backdropPath: String?,
+    @param:Json(name = "release_date") val releaseDate: String,
+    @param:Json(name = "runtime") val runtime: Long?,
+    @param:Json(name = "status") val status: String,
+    @param:Json(name = "video") val video: Boolean,
+    @param:Json(name = "vote_average") val voteAverage: Double,
+    @param:Json(name = "vote_count") val voteCount: Int,
 )
 
 @JsonClass(generateAdapter = true)
 data class NetworkGenre(
-    @Json(name = "id") val id: Int,
-    @Json(name = "name") val name: String,
+    @param:Json(name = "id") val id: Int,
+    @param:Json(name = "name") val name: String,
 )
