@@ -34,6 +34,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "TheNewMovies"
 
 include(":app")
+include(":benchmark")
 include(":core:common")
 include(":core:connectivity")
 include(":core:data:auth")
