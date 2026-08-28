@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.testing.repository
+package com.practice.thenewmovies.core.connectivity
 
-import com.practice.thenewmovies.core.connectivity.NetworkMonitor
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
-class TestNetworkMonitor : NetworkMonitor {
-
-    private val online = MutableStateFlow(true)
-
-    override val isOnline: Flow<Boolean> = online
-
-    fun setOnline(isOnline: Boolean) {
-        online.value = isOnline
-    }
+interface NetworkMonitor {
+    val isOnline: Flow<Boolean>
 }

@@ -13,10 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.thenewmovies.core.data.util
+package com.practice.thenewmovies.core.connectivity.di
 
-import kotlinx.coroutines.flow.Flow
+import com.practice.thenewmovies.core.connectivity.ConnectivityManagerNetworkMonitor
+import com.practice.thenewmovies.core.connectivity.NetworkMonitor
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-interface NetworkMonitor {
-    val isOnline: Flow<Boolean>
+@Module
+@InstallIn(SingletonComponent::class)
+internal abstract class ConnectivityModule {
+
+    @Binds
+    internal abstract fun bindsNetworkMonitor(
+        monitor: ConnectivityManagerNetworkMonitor,
+    ): NetworkMonitor
 }

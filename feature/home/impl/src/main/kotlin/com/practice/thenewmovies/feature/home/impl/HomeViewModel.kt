@@ -17,8 +17,8 @@ package com.practice.thenewmovies.feature.home.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practice.thenewmovies.core.connectivity.NetworkMonitor
 import com.practice.thenewmovies.core.data.repository.MovieListRepository
-import com.practice.thenewmovies.core.data.util.NetworkMonitor
 import com.practice.thenewmovies.core.datastore.UserPreferencesRepository
 import com.practice.thenewmovies.core.model.MovieCategory
 import dagger.hilt.android.lifecycle.HiltViewModel

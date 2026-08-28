@@ -35,6 +35,7 @@ rootProject.name = "TheNewMovies"
 
 include(":app")
 include(":core:common")
+include(":core:connectivity")
 include(":core:data")
 include(":core:database")
 include(":core:datastore")

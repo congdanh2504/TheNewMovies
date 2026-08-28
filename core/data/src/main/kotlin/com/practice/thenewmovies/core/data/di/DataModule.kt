@@ -24,8 +24,6 @@ import com.practice.thenewmovies.core.data.repository.OfflineFirstMoviesReposito
 import com.practice.thenewmovies.core.data.repository.SupabaseAuthRepository
 import com.practice.thenewmovies.core.data.repository.WatchlistRepository
 import com.practice.thenewmovies.core.data.util.Clock
-import com.practice.thenewmovies.core.data.util.ConnectivityManagerNetworkMonitor
-import com.practice.thenewmovies.core.data.util.NetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -60,11 +58,6 @@ internal abstract class DataModule {
     internal abstract fun bindsAuthRepository(
         repository: SupabaseAuthRepository,
     ): AuthRepository
-
-    @Binds
-    internal abstract fun bindsNetworkMonitor(
-        monitor: ConnectivityManagerNetworkMonitor,
-    ): NetworkMonitor
 }
 
 @Module

@@ -7,6 +7,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.connectivity)
     implementation(projects.core.data)
     implementation(projects.core.datastore)
     implementation(projects.feature.home.api)
