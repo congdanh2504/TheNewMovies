@@ -15,11 +15,18 @@
  */
 package com.practice.thenewmovies.core.data.repository
 
+import com.practice.thenewmovies.core.model.Movie
+import com.practice.thenewmovies.core.model.MovieCategory
+import kotlinx.coroutines.flow.Flow
+
 /**
- * Transitional union of the three movie repositories, kept only so consumers can be narrowed one
- * at a time. Deleted in Task A3 -- do not add methods here.
+ * Category listings. Reads come from local storage, so every screen works offline; [refresh] is
+ * the only network access and no-ops inside the sync TTL.
  */
-interface MoviesRepository :
-    MovieListRepository,
-    MovieDetailRepository,
-    MovieSearchRepository
+interface MovieListRepository {
+
+    fun getMovies(category: MovieCategory): Flow<List<Movie>>
+
+    /** Returns false when the network call failed; cached data is still readable. */
+    suspend fun refresh(category: MovieCategory): Boolean
+}

@@ -15,11 +15,12 @@
  */
 package com.practice.thenewmovies.core.data.repository
 
-/**
- * Transitional union of the three movie repositories, kept only so consumers can be narrowed one
- * at a time. Deleted in Task A3 -- do not add methods here.
- */
-interface MoviesRepository :
-    MovieListRepository,
-    MovieDetailRepository,
-    MovieSearchRepository
+import androidx.paging.PagingData
+import com.practice.thenewmovies.core.model.Movie
+import kotlinx.coroutines.flow.Flow
+
+/** Network-backed and not persisted: page numbering belongs to the server. */
+interface MovieSearchRepository {
+
+    fun searchMoviesPaged(query: String): Flow<PagingData<Movie>>
+}

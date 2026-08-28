@@ -17,6 +17,9 @@ package com.practice.thenewmovies.core.data.di
 
 import com.practice.thenewmovies.core.data.repository.AuthRepository
 import com.practice.thenewmovies.core.data.repository.DefaultWatchlistRepository
+import com.practice.thenewmovies.core.data.repository.MovieDetailRepository
+import com.practice.thenewmovies.core.data.repository.MovieListRepository
+import com.practice.thenewmovies.core.data.repository.MovieSearchRepository
 import com.practice.thenewmovies.core.data.repository.MoviesRepository
 import com.practice.thenewmovies.core.data.repository.OfflineFirstMoviesRepository
 import com.practice.thenewmovies.core.data.repository.SupabaseAuthRepository
@@ -38,6 +41,21 @@ internal abstract class DataModule {
     internal abstract fun bindsMoviesRepository(
         repository: OfflineFirstMoviesRepository,
     ): MoviesRepository
+
+    @Binds
+    internal abstract fun bindsMovieListRepository(
+        repository: OfflineFirstMoviesRepository,
+    ): MovieListRepository
+
+    @Binds
+    internal abstract fun bindsMovieDetailRepository(
+        repository: OfflineFirstMoviesRepository,
+    ): MovieDetailRepository
+
+    @Binds
+    internal abstract fun bindsMovieSearchRepository(
+        repository: OfflineFirstMoviesRepository,
+    ): MovieSearchRepository
 
     @Binds
     internal abstract fun bindsWatchlistRepository(
