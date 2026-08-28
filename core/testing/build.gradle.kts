@@ -9,6 +9,7 @@ android {
 dependencies {
     api(projects.core.connectivity)
     api(projects.core.data)
+    api(projects.core.data.auth)
     api(projects.core.datastore)
     api(projects.core.model)
 

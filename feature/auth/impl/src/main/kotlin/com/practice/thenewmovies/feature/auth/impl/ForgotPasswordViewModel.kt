@@ -17,7 +17,7 @@ package com.practice.thenewmovies.feature.auth.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practice.thenewmovies.core.data.repository.AuthRepository
+import com.practice.thenewmovies.core.data.auth.AuthRepository
 import com.practice.thenewmovies.core.model.AuthError
 import com.practice.thenewmovies.core.model.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -11,6 +11,7 @@ android {
 dependencies {
     api(projects.core.model)
     implementation(projects.core.common)
+    implementation(projects.core.data.auth)
     implementation(projects.core.database)
     implementation(projects.core.network)
     implementation(projects.core.supabase)

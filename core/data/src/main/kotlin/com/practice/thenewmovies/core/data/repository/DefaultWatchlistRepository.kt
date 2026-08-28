@@ -15,6 +15,7 @@
  */
 package com.practice.thenewmovies.core.data.repository
 
+import com.practice.thenewmovies.core.data.auth.AuthRepository
 import com.practice.thenewmovies.core.data.remote.WatchlistRemoteDataSource
 import com.practice.thenewmovies.core.data.remote.asEntity
 import com.practice.thenewmovies.core.data.remote.asRow
